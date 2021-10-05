@@ -52,7 +52,7 @@ const api = {
     if (!accessToken && (!username || !password))
       return { accessToken: null, devices: null, error: 'Login required' };
 
-    const qs = username && password ? `?u=${username}p=${password}` : '';
+    const qs = username && password ? `?u=${username}&p=${password}` : '';
 
     const response = (yield fetch(`/devices/plex/servers${qs}`)) as Response;
     const data = yield response.json();
