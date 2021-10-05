@@ -18,7 +18,7 @@ const SelectedNode = ({ node, handleSelect, handleBack }: Props) => {
       <button id="back" onClick={() => handleBack(node.parentID || node.path)}>
         go back
       </button>
-      {image && <img src={`/image/${encodeURIComponent(image)}`} />}
+      {image && <img src={`/devices/proxy?url=${encodeURIComponent(image)}`} />}
       <p>
         {description.substring(0, 200)}
         {description.length > 200 ? '...' : ''}

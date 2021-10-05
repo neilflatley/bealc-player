@@ -43,8 +43,12 @@ const SelectedItem = ({
           display: 'grid',
           gridTemplateColumns: '160px 7fr',
           background: 'white',
+          border: '3px solid #555',
+          borderRadius: '15px',
           opacity: '0.9',
           margin: '20px 20px 10px 20px',
+          padding: '0 30px 20px 0',
+          textAlign: 'justify',
         }}
       >
         <div style={{ margin: '20px' }}>
@@ -72,18 +76,25 @@ const SelectedItem = ({
       </div>
       {mediaUri && (
         <div style={{ padding: '10px 20px 20px 20px' }}>
-          <ResizingPane storageId={0} sides={['top', 'bottom', 'right']}>
+          <ResizingPane
+            storageId={0}
+            sides={['top', 'bottom', 'right']}
+            style={{
+              background: '#111',
+              border: '1px solid white',
+              borderRadius: '15px',
+              margin: 'auto',
+              minHeight: '56px',
+              minWidth: '240px',
+              padding: '10px',
+            }}
+          >
             <ReactPlayer
               playing
               controls
               url={mediaUri}
               width="100%"
               height="100%"
-              style={{
-                background: '#111',
-                minHeight: '56px',
-                minWidth: '240px',
-              }}
             />
           </ResizingPane>
         </div>

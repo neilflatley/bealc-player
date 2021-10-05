@@ -5,6 +5,7 @@ import { default as fetch } from 'node-fetch';
 import plex from './device-discovery/plex-servers';
 import cookieParser from 'cookie-parser';
 import PlexApi from 'plex-api';
+import httpProxy from 'http-proxy';
 
 globalThis.fetch = fetch;
 
@@ -61,15 +62,21 @@ const middleware = (app: Express) => {
     });
   });
 
+  const devicesProxy = httpProxy.createProxyServer();
   app.get('/devices/proxy', async (req, res) => {
     const { url } = req.query;
-    const response = await fetch(decodeURIComponent(url as string));
-    const body = await response.text();
-    res.setHeader(
-      'content-type',
-      response.headers.get('content-type') as string
+    req.url = decodeURIComponent(url as string);
+    const pathArray = req.url.split('/');
+    const protocol = pathArray[0];
+    const host = pathArray[2];
+    const baseUrl = protocol + '//' + host;
+
+    console.info(
+      `Proxying request from '${req.socket.remoteAddress}' to ${url} at host '${baseUrl}'`
     );
-    res.send(body);
+    return devicesProxy.web(req, res, {
+      target: baseUrl,
+    });
   });
 
   app.get('/devices/plex/servers', async (req, res) => {
@@ -127,9 +134,7 @@ const middleware = (app: Express) => {
         });
       localClient
         .query(decodeURIComponent(path))
-        .then(response =>
-          res.send({ ...response, local: isLocal ? 'local' : 'remote' })
-        )
+        .then(response => res.send({ ...response, local: 'local' }))
         .catch(ex => {
           res.status(500);
           if (!res.headersSent) res.send(ex.toString());

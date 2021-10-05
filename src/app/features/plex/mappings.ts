@@ -1,5 +1,8 @@
 import humanizeDuration from 'humanize-duration';
 
+const viaProxy = (url: string) =>
+  `/devices/proxy?url=${encodeURIComponent(url)}`;
+
 const baseUrl = (device: any, local = 'remote') => {
   if (local === 'local') return `http://${device.localAddresses}:32400`;
   else return `${device.scheme}://${device.host}:${device.port}`;
@@ -8,26 +11,26 @@ const baseUrl = (device: any, local = 'remote') => {
 export const plexItemMapping = {
   imageUri: ({ selectedDevice }, item) => {
     if (!selectedDevice || !item?.Media || !item.art) return;
-    return (
+    return viaProxy(
       baseUrl(selectedDevice, item.local) +
-      item.art +
-      `?X-Plex-Token=${selectedDevice?.accessToken}`
+        item.art +
+        `?X-Plex-Token=${selectedDevice?.accessToken}`
     );
   },
   thumbUri: ({ selectedDevice }, item) => {
     if (!selectedDevice || !item?.Media || !item.thumb) return;
-    return (
+    return viaProxy(
       baseUrl(selectedDevice, item.local) +
-      item.thumb +
-      `?X-Plex-Token=${selectedDevice?.accessToken}`
+        item.thumb +
+        `?X-Plex-Token=${selectedDevice?.accessToken}`
     );
   },
   mediaUri: ({ selectedDevice }, item) => {
     if (!selectedDevice || !item?.Media) return;
-    return (
+    return viaProxy(
       baseUrl(selectedDevice, item.local) +
-      item.Media[0].Part[0].key +
-      `?X-Plex-Token=${selectedDevice?.accessToken}`
+        item.Media[0].Part[0].key +
+        `?X-Plex-Token=${selectedDevice?.accessToken}`
     );
   },
   title: 'title',
@@ -50,15 +53,18 @@ export const plexItemMapping = {
 };
 
 export const dlnaItemMapping = {
-  imageUri: ['raw.upnp:icon'],
-  thumbUri: ['raw.upnp:albumArtURI[0]._'],
-  mediaUri: 'res',
+  imageUri: { $path: ['raw.upnp:icon'], $formatting: viaProxy },
+  thumbUri: { $path: ['raw.upnp:albumArtURI[0]._'], $formatting: viaProxy },
+  mediaUri: { $path: 'res', $formatting: viaProxy },
   title: 'title',
   artist: 'raw.upnp:artist[0]',
   album: 'raw.upnp:album[0]',
   summary: ['raw.upnp:longDescription'],
   year: { $path: 'raw.dc:date[0]', $formatting: (d = '') => d.substring(0, 4) },
-  duration: { $path: ['duration'], $formatting: d => humanizeDuration(d) },
+  duration: {
+    $path: ['raw.res[0].$.duration'],
+    $formatting: (d = '') => d.split('.').shift(),
+  },
   type: 'type',
-  local: 'local',
+  local: () => 'local',
 };
