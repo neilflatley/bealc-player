@@ -96,10 +96,11 @@ const middleware = (app: Express) => {
     const { path } = req.query;
     const { machineIdentifier } = req.params;
 
-    const isLocal = req.socket.localAddress === req.socket.remoteAddress;
-    console.info(`[plex] Request for: ${path}`);
-    console.info('localAddress', req.socket.localAddress);
-    console.info('remoteAddress', req.socket.remoteAddress);
+    const isLocal =
+      req.socket.localAddress.split(':').pop()?.split('.').shift() ===
+      req.socket.remoteAddress?.split(':').pop()?.split('.').shift();
+    console.info(`[plex] Request for: '${path}''`);
+    console.info('remoteAddress:', req.socket.remoteAddress);
     console.info('isLocal', isLocal);
 
     const server = cookie.servers.find(
