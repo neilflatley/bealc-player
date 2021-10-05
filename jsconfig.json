@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "es6",
+    "module": "commonjs",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/app/*"],
+      "-/*": ["./*"]
+    },
+    "esModuleInterop": true,
+  },
+  "exclude": [
+    ".storybook",
+    "config",
+    "public",
+    "webpack",
+    "node_modules",
+    "storybook-static"
+  ]
+}
