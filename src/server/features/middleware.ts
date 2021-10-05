@@ -95,6 +95,13 @@ const middleware = (app: Express) => {
     const cookie = req.cookies[cookieName];
     const { path } = req.query;
     const { machineIdentifier } = req.params;
+
+    const isLocal = req.socket.localAddress === req.socket.remoteAddress;
+    console.info(`[plex] Request for: ${path}`);
+    console.info('localAddress', req.socket.localAddress);
+    console.info('remoteAddress', req.socket.localAddress);
+    console.info('isLocal', isLocal);
+
     const server = cookie.servers.find(
       s => s.machineIdentifier === machineIdentifier
     );
@@ -119,7 +126,9 @@ const middleware = (app: Express) => {
         });
       localClient
         .query(decodeURIComponent(path))
-        .then(response => res.send({ ...response, local: 'local' }))
+        .then(response =>
+          res.send({ ...response, local: isLocal ? 'local' : 'remote' })
+        )
         .catch(ex => {
           res.status(500);
           if (!res.headersSent) res.send(ex.toString());
