@@ -1,5 +1,4 @@
 import { put, select, takeEvery } from 'redux-saga/effects';
-import Cookies from 'js-cookie';
 
 import {
   BROWSED_CONTENT,
@@ -8,7 +7,7 @@ import {
   FOUND_MEDIA_SERVERS,
   SELECT_MEDIA_SERVER,
 } from './types';
-import { completeApiPath } from '../util';
+import { completeApiPath, getPlexServersCookie } from '../util';
 import { selectCurrentDevice } from './selectors';
 
 export const plexSagas = [
@@ -44,10 +43,7 @@ function* browseMediaServer(action) {
 
 const api = {
   *findMediaServers({ username, password } = {}) {
-    const plex_servers = Cookies.get('plex_servers');
-    const accessToken = JSON.parse(
-      plex_servers?.replace('j:', '') || '{}'
-    )?.accessToken;
+    const accessToken = getPlexServersCookie()?.accessToken;
 
     if (!accessToken && (!username || !password))
       return { accessToken: null, devices: null, error: 'Login required' };

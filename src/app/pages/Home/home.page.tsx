@@ -5,15 +5,15 @@ import HomeStyled from './home.styled';
 
 // Models
 import { Props } from './home.d';
-import DeviceDiscovery from '~/features/device-discovery';
-import PlexLibrary from '~/features/plex';
+import DevicesTabs from '~/features/browser/devices-tabs';
 
-const Home = ({ entry }: Props) => {
+const Home = ({}: Props) => {
   return (
     <HomeStyled>
-      <h1>BeaLC Player</h1>
-      <DeviceDiscovery />
-      <PlexLibrary />
+      <h1 style={{ float: 'right', margin: '10px', padding: '0 20px' }}>
+        BeaLC Player
+      </h1>
+      <DevicesTabs />
     </HomeStyled>
   );
 };

@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import uniqueID from '~/core/util/unique';
 
 // Models
-import Link from '~/features/link';
-import ContentList from './components/ContentList';
 import SelectedItem from './components/SelectedItem';
 import SelectedNode from './components/SelectedNode';
 import {
@@ -39,23 +37,25 @@ const DeviceDiscovery = ({}: Props) => {
           Search for Media Servers
         </button>
       </div>
-      <div>
-        <h2>DLNA: Discovered devices</h2>
-        {devices.map((device, idx) => (
-          <div key={uniqueID()}>
-            {device.name !== selectedDevice?.name && (
-              <button
-                onClick={() => {
-                  dispatch(selectDevice(idx));
-                }}
-              >
-                {device.name}
-              </button>
-            )}
-            {device.name === selectedDevice?.name && <p>{device.name}</p>}
-          </div>
-        ))}
-      </div>
+      {devices && devices.length > 0 && (
+        <div>
+          <h2>DLNA: Discovered devices</h2>
+          {devices.map((device, idx) => (
+            <div key={uniqueID()}>
+              {device.name !== selectedDevice?.name && (
+                <button
+                  onClick={() => {
+                    dispatch(selectDevice(idx));
+                  }}
+                >
+                  {device.name}
+                </button>
+              )}
+              {device.name === selectedDevice?.name && <p>{device.name}</p>}
+            </div>
+          ))}
+        </div>
+      )}
       <SelectedItem {...selectedItem} />
       <SelectedNode
         node={selectedNode || selectedDevice}

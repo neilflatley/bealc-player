@@ -9,12 +9,8 @@ export default {
   onRouteLoad: function* onRouteLoad() {
     // Set params for routing saga
     const routeLoadOptions: RouteLoadOptions = {
-      customNavigation: {
-        ancestors: false,
-        children: false,
-        siblings: false,
-        tree: true,
-      },
+      customNavigation: true,
+      customRouting: true,
     };
     return yield routeLoadOptions;
   },

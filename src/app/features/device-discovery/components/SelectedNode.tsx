@@ -12,7 +12,16 @@ const SelectedNode = ({ node, handleSelect, handleBack }: Props) => {
   const image = node.raw?.['upnp:icon'];
   const description = (node.raw?.['upnp:longDescription'] || '').toString();
   return (
-    <div>
+    <div
+      style={{
+        background: '#eee',
+        border: '1px solid #111',
+        borderRadius: '5px',
+        height: '100%',
+        overflow: 'auto',
+        padding: '10px 20px',
+      }}
+    >
       <h2>{node.title || node.name}</h2>
       {node.error && <p style={{ color: 'red' }}>{node.error}</p>}
       <button id="back" onClick={() => handleBack(node.parentID || node.path)}>
