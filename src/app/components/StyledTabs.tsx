@@ -7,7 +7,7 @@ const StyledTabs = styled.div`
 
   .react-tabs__tab-list {
     border-bottom: 1px solid #aaa;
-    margin: 0 0 10px;
+    margin: 0;
     padding: 0;
   }
 
@@ -18,8 +18,11 @@ const StyledTabs = styled.div`
     bottom: -1px;
     position: relative;
     list-style: none;
-    padding: 6px 12px;
+    padding: 2px 6px;
     cursor: pointer;
+  }
+  .react-tabs__tab p {
+    margin-block: 0.4em;
   }
 
   .react-tabs__tab--selected {

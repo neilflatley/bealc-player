@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import ResizingPane from 'react-resizing-pane';
+import StyledItem from '../components.styled/SelectedItem.styled';
+import MediaLinkModal from './MediaLinkModal';
 
 export type SelectedItemProps = {
   imageUri: string;
@@ -14,7 +16,11 @@ export type SelectedItemProps = {
   year: string;
   duration: string;
   type: string;
+  format: string;
+  videoCodec: string;
+  audioCodec: string;
   local: 'local' | 'remote';
+  height: number;
 };
 
 const SelectedItem = ({
@@ -27,10 +33,15 @@ const SelectedItem = ({
   summary,
   year,
   duration,
+  format,
+  videoCodec,
+  audioCodec,
   local,
+  height,
 }: SelectedItemProps) => {
-  const [player, setPlayer] = useState('video');
-  const [copyText, setCopyText] = useState('Copy VLC link');
+  const [player, setPlayer] = useState(
+    ['mp3'].includes(format) ? 'audio' : 'video'
+  );
   const [playerDimensions, setPlayerDimensions] = useState({
     width: 0,
     height: 0,
@@ -43,46 +54,20 @@ const SelectedItem = ({
       const parentHeight = parentRef.current.offsetHeight;
       const parentWidth = parentRef.current.offsetWidth;
       setPlayerDimensions({
-        width: parentWidth - 40,
-        height: parentHeight - 40,
+        width: parentWidth - 20,
+        height: parentHeight,
       });
     }
-  }, [parentRef]);
+  }, [parentRef, mediaUri]);
   if (!title) return null;
   return (
-    <div
-      style={{
-        background: `linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.3)), url(${imageUri})`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        border: '2px solid black',
-        // borderRadius: '5px',
-      }}
-    >
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '160px 7fr',
-          background: 'white',
-          border: '3px solid #555',
-          borderRadius: '15px',
-          opacity: '0.9',
-          margin: '20px 20px 10px 20px',
-          padding: '0 30px 20px 0',
-        }}
-      >
-        <div style={{ margin: '20px' }}>
-          {thumbUri && (
-            <img
-              key={thumbUri}
-              src={thumbUri}
-              style={{ width: '120px' }}
-              alt={title}
-            />
-          )}
+    <StyledItem imageUri={imageUri}>
+      <div className="item_info">
+        <div className="thumb_column">
+          {thumbUri && <img key={thumbUri} src={thumbUri} alt={title} />}
         </div>
-        <div>
-          <div style={{ fontSize: '60%', float: 'right', padding: '10px 0' }}>
+        <div className="info_column">
+          <div className="info_column_main">
             <span style={{ color: '#ccc' }}>{local}</span>
             <button
               onClick={e => {
@@ -92,65 +77,63 @@ const SelectedItem = ({
             >
               Use {player === 'video' ? 'audio' : 'video'} player
             </button>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  `${window.location.protocol}//${window.location.hostname}:${window.location.port}${mediaUri}`
-                );
-                setCopyText('Link copied');
-              }}
-            >
-              {copyText}
-            </button>
+            <MediaLinkModal uri={mediaUri} />
           </div>
           <h2>{title}</h2>
           <h3>
             {album} [{year}] {artist && <span> - {artist}</span>}
-            {duration && <span style={{ fontSize: '80%' }}> {duration}</span>}
+            {duration && <span className="duration"> {duration}</span>}
+            {format && (
+              <span className="format" title={`${videoCodec} / ${audioCodec}`}>
+                {' '}
+                {format}
+              </span>
+            )}
           </h3>
 
-          {summary && <p style={{ textAlign: 'justify' }}>{summary}</p>}
+          {summary && (
+            <div className="summary">
+              <p>{summary}</p>
+            </div>
+          )}
         </div>
       </div>
       {mediaUri && (
-        <div style={{ padding: '10px 20px 20px 20px' }} ref={parentRef}>
-          {playerDimensions.width && (
+        <div className="media_player_container" ref={parentRef}>
+          {playerDimensions.width && player === 'audio' && (
             <ResizingPane
-              storageId={0}
-              sides={['top', 'bottom', 'left', 'right']}
-              style={{
-                background: '#111',
-                border: '1px solid white',
-                borderRadius: '15px',
-                margin: 'auto',
-                minHeight: '56px',
-                padding: '10px',
-              }}
+              className="resizable"
+              height={56}
               width={playerDimensions.width && playerDimensions.width}
             >
-              {player === 'audio' && (
-                <ReactAudioPlayer
-                  src={mediaUri}
-                  autoPlay
-                  controls
-                  style={{ height: '100%', width: '100%' }}
-                />
-              )}
-              {player === 'video' && (
-                <ReactPlayer
-                  playing
-                  controls
-                  light={thumbUri || imageUri}
-                  url={mediaUri}
-                  width="100%"
-                  height="100%"
-                />
-              )}
+              <ReactAudioPlayer
+                src={mediaUri}
+                autoPlay
+                controls
+                style={{ height: '100%', width: '100%' }}
+              />
+            </ResizingPane>
+          )}
+          {playerDimensions.width && player === 'video' && (
+            <ResizingPane
+              className="resizable"
+              sides={['top', 'bottom', 'left', 'right']}
+              height={height}
+              width={playerDimensions.width && playerDimensions.width}
+            >
+              <ReactPlayer
+                playing
+                controls
+                light={thumbUri || imageUri}
+                url={mediaUri}
+                width="100%"
+                height="100%"
+              />
             </ResizingPane>
           )}
         </div>
       )}
-    </div>
+    </StyledItem>
   );
 };
 

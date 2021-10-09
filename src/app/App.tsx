@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { hot } from 'react-hot-loader';
 
 import { ThemeProvider } from 'styled-components';
+import { ModalProvider } from 'styled-react-modal';
 import { RouteLoader } from '@zengenti/contensis-react-base/routing';
 import { Loading } from '~/core/routes/Loading';
 import NotFound from '~/pages/NotFound';
@@ -36,9 +37,11 @@ const AppRoot = (props: AppRootProps) => {
     <>
       <div id="app-root">
         <ThemeProvider theme={defaultTheme}>
-          <GlobalStyle />
-          {isLoading && <Loading />}
-          <RouteLoader {...props} notFoundComponent={NotFound} />
+          <ModalProvider>
+            <GlobalStyle />
+            {isLoading && <Loading />}
+            <RouteLoader {...props} notFoundComponent={NotFound} />
+          </ModalProvider>
         </ThemeProvider>
       </div>
     </>

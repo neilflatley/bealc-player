@@ -10,33 +10,48 @@ const GlobalStyle = createGlobalStyle`
 		box-sizing: border-box;
 	}
 
+  @font-face {
+    font-family: "Circular Spotify Tx T Light";
+    src: url("//db.onlinewebfonts.com/t/1ccdd11fd9d1d81756c40d7acb17d0aa.eot"); src: url("//db.onlinewebfonts.com/t/1ccdd11fd9d1d81756c40d7acb17d0aa.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/1ccdd11fd9d1d81756c40d7acb17d0aa.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/1ccdd11fd9d1d81756c40d7acb17d0aa.woff") format("woff"), url("//db.onlinewebfonts.com/t/1ccdd11fd9d1d81756c40d7acb17d0aa.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/1ccdd11fd9d1d81756c40d7acb17d0aa.svg#Circular Spotify Tx T Light") format("svg");
+  }
+
   html, body {
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    /* font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; */
+
+    font-family: "Circular Spotify Tx T Light", Arial, "Helvetica Neue", Helvetica, sans-serif;
+
     /* this sets 1rem to 10px */
     font-size: 62.5%;
   }
 
   body{
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     font-weight: normal;
+    line-height: 1.8rem;
   }
 
   h1, .h1{
-    font-size: 5.6rem;
-    line-height: 6.4rem;
-    font-weight: 500;
+    font-size: 2rem;
+    line-height: 2.4rem;
+    font-weight: normal;
+    margin-block-start: 0.4rem;
+    margin-block-end: 0.4rem;
   }
 
   h2, .h2{
-    font-size: 3.2rem;
-    line-height: 4rem;
-    font-weight: 500;
+    font-size: 2rem;
+    line-height: 2.4rem;
+    font-weight: bold;
+    margin-block-start: 0.4rem;
+    margin-block-end: 0.4rem;
   }
 
   h3, .h3{
-    font-size: 2.4rem;
-    line-height: 3.2rem;
+    font-size: 1.6rem;
+    line-height: 2.0rem;
     font-weight: 500;
+    margin-block-start: 0.4rem;
+    margin-block-end: 0.4rem;
   }
 
   h4, .h4{

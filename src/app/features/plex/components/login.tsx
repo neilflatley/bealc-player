@@ -14,9 +14,10 @@ const Login = ({ submit, devices }) => {
     return (
       <div>
         <p>
-          Signed into plex.tv <br />
+          Signed into plex.tv
           <span style={{ fontSize: '80%', color: '#333' }}>
-            {servers?.servers?.length} servers available
+            {' '}
+            ({servers?.servers?.length} servers available)
           </span>
         </p>
       </div>

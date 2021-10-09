@@ -5,30 +5,13 @@ import { browseServer, selectContentNode } from '../redux/actions';
 
 import SelectedItem from '~/features/device-discovery/components/SelectedItem';
 import SelectedNode from '~/features/device-discovery/components/SelectedNode';
-import ResizingPane from 'react-resizing-pane';
+import ServerBrowser from '~/components/ServerBrowser';
 
 const PlexServerBrowser = ({ selectedItem, selectedNode }) => {
   const dispatch = useDispatch();
   return (
-    <div
-      style={{
-        background: '#111',
-        border: '1px solid #eee',
-        borderRadius: '5px',
-        display: 'grid',
-        gridTemplateColumns: '1fr 9fr',
-        minHeight: '400px',
-        minWidth: '100%',
-        padding: '10px',
-      }}
-    >
-      <ResizingPane
-        sides={['top', 'bottom', 'left', 'right']}
-        style={{
-          minHeight: '100%',
-          minWidth: '120px',
-        }}
-      >
+    <ServerBrowser
+      selectedNode={() => (
         <SelectedNode
           node={selectedNode}
           handleSelect={(id: string) => {
@@ -46,9 +29,9 @@ const PlexServerBrowser = ({ selectedItem, selectedNode }) => {
             dispatch(selectContentNode(id));
           }}
         />
-      </ResizingPane>
-      <SelectedItem {...selectedItem} />
-    </div>
+      )}
+      selectedItem={() => <SelectedItem {...selectedItem} />}
+    />
   );
 };
 

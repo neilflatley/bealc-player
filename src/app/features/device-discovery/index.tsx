@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ServerBrowser from '~/components/ServerBrowser';
 import uniqueID from '~/core/util/unique';
+import DlnaTabs from './components/dlna-tabs';
 
 // Models
 import SelectedItem from './components/SelectedItem';
@@ -27,7 +29,7 @@ const DeviceDiscovery = ({}: Props) => {
 
   return (
     <>
-      <div>
+      <div className="login_container">
         <button
           id="btn"
           onClick={() => {
@@ -37,35 +39,21 @@ const DeviceDiscovery = ({}: Props) => {
           Search for Media Servers
         </button>
       </div>
-      {devices && devices.length > 0 && (
-        <div>
-          <h2>DLNA: Discovered devices</h2>
-          {devices.map((device, idx) => (
-            <div key={uniqueID()}>
-              {device.name !== selectedDevice?.name && (
-                <button
-                  onClick={() => {
-                    dispatch(selectDevice(idx));
-                  }}
-                >
-                  {device.name}
-                </button>
-              )}
-              {device.name === selectedDevice?.name && <p>{device.name}</p>}
-            </div>
-          ))}
-        </div>
-      )}
-      <SelectedItem {...selectedItem} />
-      <SelectedNode
-        node={selectedNode || selectedDevice}
-        handleSelect={(id = '0') => {
-          dispatch(browseServer(id));
-          dispatch(selectContentNode(id));
-        }}
-        handleBack={(id: string) => {
-          dispatch(selectContentNode(id));
-        }}
+      <DlnaTabs devices={devices} />
+      <ServerBrowser
+        selectedItem={() => <SelectedItem {...selectedItem} />}
+        selectedNode={() => (
+          <SelectedNode
+            node={selectedNode || selectedDevice}
+            handleSelect={(id = '0') => {
+              dispatch(browseServer(id));
+              dispatch(selectContentNode(id));
+            }}
+            handleBack={(id: string) => {
+              dispatch(selectContentNode(id));
+            }}
+          />
+        )}
       />
     </>
   );

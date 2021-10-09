@@ -50,11 +50,23 @@ export const plexItemMapping = {
   },
   type: 'type',
   local: 'local',
+  format: ['Media[0].Part[0].container', 'Media[0].container'],
+  videoCodec: 'Media[0].videoCodec',
+  audioCodec: 'Media[0].audioCodec',
+  width: 'Media[0].width',
+  height: 'Media[0].height',
 };
 
 export const dlnaItemMapping = {
   imageUri: { $path: ['raw.upnp:icon'], $formatting: viaProxy },
-  thumbUri: { $path: ['raw.upnp:albumArtURI[0]._'], $formatting: viaProxy },
+  thumbUri: {
+    $path: [
+      'raw.upnp:albumArtURI[0]._',
+      "raw.res[?(@['$'].protocolInfo.match(/image/))]._",
+    ],
+    $formatting: viaProxy,
+    $return: (uri: string | string[]) => (Array.isArray(uri) ? uri[0] : uri),
+  },
   mediaUri: { $path: 'res', $formatting: viaProxy },
   title: 'title',
   artist: 'raw.upnp:artist[0]',
@@ -67,4 +79,22 @@ export const dlnaItemMapping = {
   },
   type: 'type',
   local: () => 'local',
+  format: {
+    $path: ['raw.res[0]._'],
+    $formatting: (uri = '') =>
+      uri
+        .split(',')
+        .filter(q => q.startsWith('ext='))?.[0]
+        ?.replace('ext=.', ''),
+  },
+  videoCodec: () => '?',
+  audioCodec: () => '?',
+  width: {
+    $path: 'raw.res[0].$.resolution',
+    $formatting: (res = '0x0') => res.split('x')[0],
+  },
+  height: {
+    $path: 'raw.res[0].$.resolution',
+    $formatting: (res = '0x0') => res.split('x')[1],
+  },
 };

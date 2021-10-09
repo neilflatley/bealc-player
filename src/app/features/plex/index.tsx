@@ -22,7 +22,7 @@ const PlexLibrary = ({}: Props) => {
 
   return (
     <>
-      <div style={{ float: 'right', padding: '0 10px' }}>
+      <div className="login_container">
         <Login
           submit={(u, p) => dispatch(findDevices(u, p))}
           devices={devices}
