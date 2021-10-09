@@ -12,6 +12,7 @@ const StyledBrowser = styled.div`
 `;
 
 const ServerBrowser = ({ selectedItem, selectedNode }) => {
+  if (typeof window === 'undefined') return null;
   return (
     <StyledBrowser>
       <ResizingPane

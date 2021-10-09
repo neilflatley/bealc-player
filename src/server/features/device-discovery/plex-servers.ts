@@ -1,13 +1,18 @@
 import { PlexAPIClient } from 'plex-wrapper';
+import packagejson from '-/package.json';
 
-const clientId = '3a0b8c77-8112-460f-add2-bb7cea9fb931';
+export const clientId = '3a0b8c77-8112-460f-add2-bb7cea9fb931';
 
 let client: PlexAPIClient;
 
 const plex = {
   accessToken: () => client?.accessToken,
   client: (accessToken = '', username = '', password = '') => {
-    client = new PlexAPIClient(clientId, username, password);
+    client = new PlexAPIClient(clientId, username, password, {
+      title: 'BeaLC Player',
+      version: packagejson.version,
+      description: 'A DLNA and Plex client',
+    });
     if (accessToken) client.accessToken = accessToken;
     return client;
   },

@@ -2,10 +2,12 @@ import { Express } from 'express';
 import { getDevices } from './device-discovery';
 import browseServer from './device-discovery/dlna-browser';
 import { default as fetch } from 'node-fetch';
-import plex from './device-discovery/plex-servers';
+import plex, { clientId } from './device-discovery/plex-servers';
 import cookieParser from 'cookie-parser';
 import PlexApi from 'plex-api';
 import httpProxy from 'http-proxy';
+import os from 'os';
+import packagejson from '-/package.json';
 
 globalThis.fetch = fetch;
 
@@ -115,15 +117,23 @@ const middleware = (app: Express) => {
     );
     try {
       const { scheme, host, localAddresses, port, accessToken } = server;
+      const options = {
+        identifier: clientId,
+        product: 'BeaLC Player',
+        version: packagejson.version,
+        deviceName: os.hostname(),
+      };
       const remoteClient = new PlexApi({
         https: scheme === 'https',
         hostname: host,
         port: Number(port),
         token: accessToken,
+        options,
       });
       const localClient = new PlexApi({
         hostname: localAddresses,
         token: accessToken,
+        options,
       });
       remoteClient
         .query(decodeURIComponent(path))
