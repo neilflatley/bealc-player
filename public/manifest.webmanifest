@@ -1,6 +1,6 @@
 {
-  "name": "Ludlow University Demo Site",
-  "short_name": "Ludlow Uni",
+  "name": "BeaLC Player - a DLNA and Plex client",
+  "short_name": "BeaLC Player",
   "theme_color": "#FF227F",
   "background_color": "#FF227F",
   "display": "minimal-ui",
