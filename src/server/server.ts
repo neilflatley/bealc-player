@@ -59,7 +59,7 @@ process.on('SIGTERM', () => {
 
 process.on('uncaughtException', e => {
   console.error(e, '\n[server] uncaughtException Shutting down...');
-  process.exit();
+  // process.exit();
 });
 
 app.emit('ready');

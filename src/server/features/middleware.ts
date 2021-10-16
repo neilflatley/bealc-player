@@ -85,9 +85,19 @@ const middleware = (app: Express) => {
     const cookieName = 'plex_servers';
     const cookie = req.cookies[cookieName];
     const { accessToken = cookie?.accessToken, u, p } = req.query;
+
     try {
       if (!accessToken && (!u || !p)) throw new Error('Missing credentials');
-      const servers = await plex.client(accessToken, u, p).getServers();
+      const client = await plex.client(accessToken, u, p);
+      process.on('unhandledRejection', e => {
+        console.error(e, '\n[server] unhandledRejection ...');
+        if (!res.headersSent) {
+          res.clearCookie(cookieName);
+          res.status(500);
+          res.send(e.toString());
+        }
+      });
+      const servers = await client?.getServers();
       const response = { accessToken: plex.accessToken(), servers };
       res.cookie(cookieName, response, { maxAge: 24 * 60 * 60 * 1000 });
       res.send(response);
