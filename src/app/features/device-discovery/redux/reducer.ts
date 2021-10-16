@@ -4,16 +4,14 @@ import {
   BROWSED_CONTENT,
   FIND_MEDIA_SERVERS,
   FOUND_MEDIA_SERVERS,
-  SELECT_CONTENT_NODE,
   SELECT_MEDIA_SERVER,
 } from './types';
 import mapJson from 'jsonpath-mapper';
 import { dlnaItemMapping } from '~/features/plex/mappings';
+import { findContent } from '~/features/browser/redux/reducer';
 
 const initialState = {
   devices: [],
-  selectedItem: null,
-  selectedNode: null,
   selectedServer: null,
   servers: {
     error: null,
@@ -21,17 +19,6 @@ const initialState = {
   },
 };
 
-export const findContent = (content, id) => {
-  if (!content) return content;
-  const c = content.find(c => c.id === id);
-  if (c) return c;
-
-  return content
-    .map(c => {
-      if (Array.isArray(c.children)) return findContent(c.children, id);
-    })
-    .filter(c => c)?.[0];
-};
 const arrayMerge = (_, sourceArray) => sourceArray;
 
 export default produce((state: Draft<any>, action) => {
@@ -53,13 +40,6 @@ export default produce((state: Draft<any>, action) => {
         ...d,
         isSelected: i === action.pos,
       }));
-      return;
-    }
-    case SELECT_CONTENT_NODE: {
-      const server = state.devices.find(d => d.isSelected);
-      const contentNode = findContent(server.content, action.id);
-      if (contentNode?.type === 'item') state.selectedItem = contentNode;
-      else state.selectedNode = contentNode;
       return;
     }
     case BROWSED_CONTENT: {

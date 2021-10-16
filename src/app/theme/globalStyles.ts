@@ -25,7 +25,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body{
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: normal;
     line-height: 1.8rem;
   }
@@ -72,6 +72,20 @@ const GlobalStyle = createGlobalStyle`
     font-weight: normal;
   }
 
+  .link-button {
+    background: none;
+     border: none; 
+     padding: 0;
+    
+    /* optional*/
+    font-family: arial,sans-serif;
+    /* input has OS specific font-family*/
+     color: #069;
+     cursor: pointer;
+  }
+  .link-button:hover{
+    text-decoration: underline;
+  }
 `;
 
 export default GlobalStyle;

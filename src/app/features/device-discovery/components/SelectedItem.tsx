@@ -6,6 +6,7 @@ import StyledItem from '../components.styled/SelectedItem.styled';
 import MediaLinkModal from './MediaLinkModal';
 
 export type SelectedItemProps = {
+  autoPlay: boolean;
   imageUri: string;
   thumbUri: string;
   mediaUri: string;
@@ -24,6 +25,7 @@ export type SelectedItemProps = {
 };
 
 const SelectedItem = ({
+  autoPlay,
   imageUri,
   thumbUri,
   mediaUri,
@@ -70,6 +72,7 @@ const SelectedItem = ({
           <div className="info_column_main">
             <span style={{ color: '#ccc' }}>{local}</span>
             <button
+              className="link-button"
               onClick={e => {
                 e.preventDefault();
                 setPlayer(player === 'video' ? 'audio' : 'video');
@@ -122,9 +125,9 @@ const SelectedItem = ({
               width={playerDimensions.width && playerDimensions.width}
             >
               <ReactPlayer
-                playing
+                playing={autoPlay}
                 controls
-                light={thumbUri || imageUri}
+                light={!autoPlay ? thumbUri || imageUri : undefined}
                 url={mediaUri}
                 width="100%"
                 height="100%"

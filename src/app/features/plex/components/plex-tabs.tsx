@@ -6,9 +6,7 @@ import uniqueID from '~/core/util/unique';
 
 import { selectDevice } from '../redux/actions';
 
-import PlexServerBrowser from './plex-browser';
-
-const PlexTabs = ({ devices, selectedItem, selectedNode }) => {
+const PlexTabs = ({ devices }) => {
   const dispatch = useDispatch();
   const [tabIndex, setTabIndex] = useState(-1);
   const BoundTabs = ({ devices }) =>
@@ -45,10 +43,6 @@ const PlexTabs = ({ devices, selectedItem, selectedNode }) => {
         </TabList>
       </Tabs>
       <TabPanel></TabPanel>
-      <PlexServerBrowser
-        selectedNode={selectedNode}
-        selectedItem={selectedItem}
-      />
     </StyledTabs>
   );
 };

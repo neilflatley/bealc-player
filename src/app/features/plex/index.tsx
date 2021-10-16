@@ -3,22 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // Models
 import { findDevices } from './redux/actions';
-import { selectCurrentDevice, selectCurrentNode } from './redux/selectors';
 import Login from './components/login';
 import PlexTabs from './components/plex-tabs';
+import { selectDevices } from '../browser/redux/selectors';
 type Props = {};
 
 const PlexLibrary = ({}: Props) => {
   const dispatch = useDispatch();
-  const devices = useSelector(state => state.plex.devices);
-  const selectedDevice = useSelector(selectCurrentDevice);
-
-  const selectedItem = useSelector(state => state.plex.selectedItem);
-
-  const selectedNode = useSelector(state => {
-    const currentNode = state.plex.selectedNode;
-    return selectCurrentNode(state, `${currentNode?.path}/${currentNode?.key}`);
-  });
+  const devices = useSelector(selectDevices);
 
   return (
     <>
@@ -28,11 +20,7 @@ const PlexLibrary = ({}: Props) => {
           devices={devices}
         />
       </div>
-      <PlexTabs
-        devices={devices}
-        selectedItem={selectedItem}
-        selectedNode={selectedNode || selectedDevice}
-      />
+      <PlexTabs devices={devices} />
     </>
   );
 };

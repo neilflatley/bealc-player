@@ -12,17 +12,23 @@ const SelectedNode = ({ node, handleSelect, handleBack }: Props) => {
   if (!node) return null;
   const image = node.raw?.['upnp:icon'];
   const description = (node.raw?.['upnp:longDescription'] || '').toString();
+  const goBackTo = node.parentID || node.path;
   return (
     <StyledNode>
       <div>
         <h2>{node.title || node.name}</h2>
         {node.error && <p style={{ color: 'red' }}>{node.error}</p>}
-        <button
-          id="back"
-          onClick={() => handleBack(node.parentID || node.path)}
-        >
-          go back
-        </button>
+        {typeof goBackTo !== 'undefined' && (
+          <p>
+            <button
+              id="back"
+              className="link-button"
+              onClick={() => handleBack(goBackTo)}
+            >
+              ⏶ go back
+            </button>
+          </p>
+        )}
         {image && (
           <img src={`/devices/proxy?url=${encodeURIComponent(image)}`} />
         )}

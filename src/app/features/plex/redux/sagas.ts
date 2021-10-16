@@ -9,12 +9,13 @@ import {
 } from './types';
 import { completeApiPath, getPlexServersCookie } from '../util';
 import { selectCurrentDevice } from './selectors';
+import to from 'await-to-js';
 
 export const plexSagas = [
   findDevices(),
   takeEvery(FIND_MEDIA_SERVERS, findDevices),
-  takeEvery(SELECT_MEDIA_SERVER, browseMediaServer),
-  takeEvery(BROWSE_SERVER, browseMediaServer),
+  takeEvery(SELECT_MEDIA_SERVER, browsePlexMediaServer),
+  takeEvery(BROWSE_SERVER, browsePlexMediaServer),
 ];
 
 function* findDevices(action) {
@@ -24,7 +25,7 @@ function* findDevices(action) {
     servers,
   });
 }
-function* browseMediaServer(action) {
+export function* browsePlexMediaServer(action) {
   const path = action.path || '/';
 
   const server = yield select(selectCurrentDevice);
@@ -50,12 +51,22 @@ const api = {
 
     const qs = username && password ? `?u=${username}&p=${password}` : '';
 
-    const response = (yield fetch(`/devices/plex/servers${qs}`)) as Response;
-    const data = yield response.json();
-    const devices = Array.isArray(data?.servers) ? data.servers : null;
-    const error = !Array.isArray(data?.error) ? data.error : null;
+    const [error, response] = yield to(
+      fetch(`/devices/plex/servers${qs}`) as Response
+    );
+    if (response.ok) {
+      const data = yield response.json();
+      const devices = Array.isArray(data?.servers) ? data.servers : null;
+      const error = !Array.isArray(data?.error) ? data.error : null;
 
-    return { accessToken, devices, error };
+      return { accessToken, devices, error };
+    } else {
+      let text = '';
+      try {
+        if (response) text = yield response.text();
+      } catch (ex) {}
+      return { devices: [], error: text || error };
+    }
   },
   *browseServer(id: string, path = '', parentPath = '') {
     const enhancedPath = completeApiPath(path);

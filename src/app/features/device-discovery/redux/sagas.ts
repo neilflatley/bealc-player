@@ -1,4 +1,6 @@
+import to from 'await-to-js';
 import { put, select, takeEvery } from 'redux-saga/effects';
+import { selectCurrentDevice } from './selectors';
 
 import {
   BROWSED_CONTENT,
@@ -11,8 +13,8 @@ import {
 export const discoverySagas = [
   findDevices(),
   takeEvery(FIND_MEDIA_SERVERS, findDevices),
-  takeEvery(SELECT_MEDIA_SERVER, browseMediaServer),
-  takeEvery(BROWSE_SERVER, browseMediaServer),
+  takeEvery(SELECT_MEDIA_SERVER, browseDlnaMediaServer),
+  takeEvery(BROWSE_SERVER, browseDlnaMediaServer),
 ];
 function* findDevices() {
   const servers = yield api.findMediaServers();
@@ -21,12 +23,10 @@ function* findDevices() {
     servers,
   });
 }
-function* browseMediaServer(action) {
-  const id = action.id || 0;
+export function* browseDlnaMediaServer(action) {
+  const id = action.path || 0;
 
-  const server = yield select(state =>
-    state.dlna.devices.find(d => d.isSelected)
-  );
+  const server = yield select(selectCurrentDevice);
 
   const browsed = yield api.browseServer(server.controlUrl, id);
   yield put({
@@ -38,12 +38,19 @@ function* browseMediaServer(action) {
 
 const api = {
   *findMediaServers() {
-    const response = (yield fetch('/devices/find')) as Response;
-    const data = yield response.json();
-    const devices = Array.isArray(data) ? data : null;
-    const error = !Array.isArray(data) ? data : null;
-
-    return { devices, error };
+    const [error, response] = yield to(fetch('/devices/find') as Response);
+    if (response.ok) {
+      const data = yield response.json();
+      const devices = Array.isArray(data) ? data : null;
+      const error = !Array.isArray(data) ? data : null;
+      return { devices, error };
+    } else {
+      let text = '';
+      try {
+        if (response) text = yield response.text();
+      } catch (ex) {}
+      return { devices: [], error: text || error };
+    }
   },
   *browseServer(controlUrl: string, id = '0') {
     const response = (yield fetch(

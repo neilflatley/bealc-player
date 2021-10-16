@@ -36,14 +36,18 @@ const MediaLinkModal = ({ uri }: { uri: string }) => {
 
   return (
     <span>
-      <button onClick={toggleModal}>{copyText}</button>
+      <button className="link-button" onClick={toggleModal}>
+        {copyText}
+      </button>
       <StyledModal
         isOpen={isOpen}
         onBackgroundClick={toggleModal}
         onEscapeKeydown={toggleModal}
       >
         <div className="close">
-          <button onClick={toggleModal}>Close</button>
+          <button className="link-button" onClick={toggleModal}>
+            Close
+          </button>
         </div>
         <h3>Stream URL for VLC Media Player</h3>
         <p>

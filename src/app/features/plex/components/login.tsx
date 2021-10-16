@@ -38,6 +38,7 @@ const Login = ({ submit, devices }) => {
       ></input>
       <button
         id="btn"
+        className="link-button"
         onClick={() => {
           submit(user, password);
         }}

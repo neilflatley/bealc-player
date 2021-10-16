@@ -4,16 +4,14 @@ import {
   BROWSED_CONTENT,
   FIND_MEDIA_SERVERS,
   FOUND_MEDIA_SERVERS,
-  SELECT_CONTENT_NODE,
   SELECT_MEDIA_SERVER,
 } from './types';
 import mapJson from 'jsonpath-mapper';
 import { plexItemMapping } from '../mappings';
+import { findContent } from '~/features/browser/redux/reducer';
 
 const initialState = {
   devices: [],
-  selectedItem: null,
-  selectedNode: null,
   selectedServer: null,
   servers: {
     accessToken: null,
@@ -22,20 +20,6 @@ const initialState = {
   },
 };
 
-export const findContent = (content, id) => {
-  if (!id) return null;
-  if (!content || typeof content !== 'object') return content;
-  const c = content.find(
-    c => c.id === id || c.path + '/' + c.key === id || c.key === id
-  );
-  if (c) return c;
-
-  return content
-    .map(c => {
-      if (Array.isArray(c.children)) return findContent(c.children, id);
-    })
-    .filter(c => c)?.[0];
-};
 const arrayMerge = (_, sourceArray) => sourceArray;
 
 export default produce((state: Draft<any>, action) => {
@@ -45,9 +29,11 @@ export default produce((state: Draft<any>, action) => {
       return;
 
     case FOUND_MEDIA_SERVERS: {
-      state.devices = merge(state.devices, action.servers.devices, {
-        arrayMerge,
-      });
+      if (action?.servers?.devices)
+        state.devices = merge(state.devices, action.servers.devices, {
+          arrayMerge,
+        });
+      else state.error = action?.error;
       state.servers.loading = false;
       return;
     }
@@ -57,17 +43,6 @@ export default produce((state: Draft<any>, action) => {
         ...d,
         isSelected: i === action.pos,
       }));
-      return;
-    }
-    case SELECT_CONTENT_NODE: {
-      const server = state.devices.find(d => d.isSelected);
-      const contentNode = findContent(server.content, action.path);
-      if (
-        ['episode', 'movie', 'track'].includes(contentNode?.type) &&
-        contentNode?.Media
-      )
-        state.selectedItem = contentNode;
-      else state.selectedNode = contentNode;
       return;
     }
     case BROWSED_CONTENT: {
