@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import ResizingPane from 'react-resizing-pane';
 
-import SelectedItem from '~/features/device-discovery/components/SelectedItem';
-import SelectedNode from '~/features/device-discovery/components/SelectedNode';
+import SelectedItem from '~/features/browser/components/SelectedItem';
+import SelectedNode from '~/features/browser/components/SelectedNode';
 import {
   browseServer,
   selectContentNode,
@@ -16,10 +16,14 @@ import {
 } from '~/features/browser/redux/selectors';
 
 const StyledBrowser = styled.div`
+  /* fill remaining height */
+  position: absolute;
+  top: 70px;
+  bottom: 0;
+
   border-radius: 5px;
   display: grid;
   grid-template-columns: 1fr 9fr;
-  min-height: 400px;
   min-width: 100%;
   padding: 10px;
 `;
@@ -37,7 +41,7 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
       <ResizingPane
         height={550}
         storageId={1}
-        sides={['top', 'bottom', 'left', 'right']}
+        sides={['left', 'right']}
         style={{
           minHeight: '100%',
           minWidth: '120px',

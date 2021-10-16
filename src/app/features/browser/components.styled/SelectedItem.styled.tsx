@@ -46,7 +46,6 @@ const StyledItem = styled.div`
 
   .media_player_container {
     padding: 0 10px 20px 10px;
-    height: 100%;
   }
   .media_player_container .resizable {
     background: #111;
@@ -54,6 +53,7 @@ const StyledItem = styled.div`
     border-radius: 15px;
     margin: auto;
     min-height: 56px;
+    min-width: 120px;
     padding: 10px;
   }
 `;

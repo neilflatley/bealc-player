@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 const StyledPlayer = styled.div`
+  height: 100%;
   background: linear-gradient(rgba(77, 108, 136, 0.8), rgba(177, 122, 87, 0.8));
-  border-radius: 5px;
 
   .logo {
     float: right;

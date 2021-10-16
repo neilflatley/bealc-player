@@ -10,13 +10,14 @@ type Props = {
 
 const SelectedNode = ({ node, handleSelect, handleBack }: Props) => {
   if (!node) return null;
-  const image = node.raw?.['upnp:icon'];
-  const description = (node.raw?.['upnp:longDescription'] || '').toString();
+  const title = node.title || node.name;
+  const description = node.summary || '';
+  const imageUri = node.imageUri || node.thumbUri;
   const goBackTo = node.parentID || node.path;
   return (
     <StyledNode>
       <div>
-        <h2>{node.title || node.name}</h2>
+        <h2>{title}</h2>
         {node.error && <p style={{ color: 'red' }}>{node.error}</p>}
         {typeof goBackTo !== 'undefined' && (
           <p>
@@ -29,10 +30,8 @@ const SelectedNode = ({ node, handleSelect, handleBack }: Props) => {
             </button>
           </p>
         )}
-        {image && (
-          <img src={`/devices/proxy?url=${encodeURIComponent(image)}`} />
-        )}
-        <p>
+        {imageUri && <img alt={title} src={imageUri} />}
+        <p style={{textAlign:'justify'}}>
           {description.substring(0, 200)}
           {description.length > 200 ? '...' : ''}
         </p>

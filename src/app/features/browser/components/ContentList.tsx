@@ -14,7 +14,7 @@ const ContentList = ({ content, handleSelect }: Props) => {
         content.map(c => (
           <p key={uniqueID()}>
             {' '}
-            {(c.type === 'album' || c.album) && (
+            {c.canPlay && (
               <button
                 className="link-button play-button"
                 onClick={() => {

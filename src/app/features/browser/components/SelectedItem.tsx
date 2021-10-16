@@ -3,7 +3,7 @@ import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import ResizingPane from 'react-resizing-pane';
 import StyledItem from '../components.styled/SelectedItem.styled';
-import MediaLinkModal from './MediaLinkModal';
+import MediaLinkModal from '../../../components/MediaLinkModal';
 
 export type SelectedItemProps = {
   autoPlay: boolean;
@@ -44,6 +44,7 @@ const SelectedItem = ({
   const [player, setPlayer] = useState(
     ['mp3'].includes(format) ? 'audio' : 'video'
   );
+
   const [playerDimensions, setPlayerDimensions] = useState({
     width: 0,
     height: 0,
@@ -61,6 +62,11 @@ const SelectedItem = ({
       });
     }
   }, [parentRef, mediaUri]);
+
+  useEffect(() => {
+    if (['mp3'].includes(format) ? 'audio' : 'video') setPlayer('audio');
+  }, [format]);
+
   if (!title) return null;
   return (
     <StyledItem imageUri={imageUri}>
@@ -104,18 +110,14 @@ const SelectedItem = ({
       {mediaUri && (
         <div className="media_player_container" ref={parentRef}>
           {playerDimensions.width && player === 'audio' && (
-            <ResizingPane
-              className="resizable"
-              height={56}
-              width={playerDimensions.width && playerDimensions.width}
-            >
+            <div className="resizable" style={{ paddingTop: '16px' }}>
               <ReactAudioPlayer
                 src={mediaUri}
                 autoPlay
                 controls
-                style={{ height: '100%', width: '100%' }}
+                style={{ width: '100%' }}
               />
-            </ResizingPane>
+            </div>
           )}
           {playerDimensions.width && player === 'video' && (
             <ResizingPane

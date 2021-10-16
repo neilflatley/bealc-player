@@ -22,12 +22,17 @@ const GlobalStyle = createGlobalStyle`
 
     /* this sets 1rem to 10px */
     font-size: 62.5%;
+
   }
 
   body{
     font-size: 1.4rem;
     font-weight: normal;
     line-height: 1.8rem;
+  }
+
+  html, body, #root, #app-root {
+    height: 100%;
   }
 
   h1, .h1{

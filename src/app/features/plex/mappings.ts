@@ -9,8 +9,9 @@ const baseUrl = (device: any, local = 'remote') => {
 };
 
 export const plexItemMapping = {
+  canPlay: ({ type }) => ['album', 'episode', 'movie', 'track'].includes(type),
   imageUri: ({ selectedDevice }, item) => {
-    if (!selectedDevice || !item?.Media || !item.art) return;
+    if (!selectedDevice || !item.art) return;
     return viaProxy(
       baseUrl(selectedDevice, item.local) +
         item.art +
@@ -18,7 +19,7 @@ export const plexItemMapping = {
     );
   },
   thumbUri: ({ selectedDevice }, item) => {
-    if (!selectedDevice || !item?.Media || !item.thumb) return;
+    if (!selectedDevice || !item.thumb) return;
     return viaProxy(
       baseUrl(selectedDevice, item.local) +
         item.thumb +
@@ -57,8 +58,14 @@ export const plexItemMapping = {
   height: 'Media[0].height',
 };
 
+const album = 'raw.upnp:album[0]';
+
 export const dlnaItemMapping = {
-  imageUri: { $path: ['raw.upnp:icon'], $formatting: viaProxy },
+  canPlay: {
+    $path: album,
+    $formatting: (album: string) => !!album,
+  },
+  imageUri: { $path: ['raw.upnp:icon[0]'], $formatting: viaProxy },
   thumbUri: {
     $path: [
       'raw.upnp:albumArtURI[0]._',
@@ -70,8 +77,8 @@ export const dlnaItemMapping = {
   mediaUri: { $path: 'res', $formatting: viaProxy },
   title: 'title',
   artist: 'raw.upnp:artist[0]',
-  album: 'raw.upnp:album[0]',
-  summary: ['raw.upnp:longDescription'],
+  album,
+  summary: ['raw.upnp:longDescription[0]'],
   year: { $path: 'raw.dc:date[0]', $formatting: (d = '') => d.substring(0, 4) },
   duration: {
     $path: ['raw.res[0].$.duration'],
@@ -81,11 +88,11 @@ export const dlnaItemMapping = {
   local: () => 'local',
   format: {
     $path: ['raw.res[0]._'],
-    $formatting: (uri = '') =>
-      uri
-        .split(',')
-        .filter(q => q.startsWith('ext='))?.[0]
-        ?.replace('ext=.', ''),
+    $formatting: (uri = '') => uri.split('.')?.pop(),
+    // uri
+    //   .split(',')
+    //   .filter(q => q.startsWith('ext='))?.[0]
+    //   ?.replace('ext=.', ''),
   },
   videoCodec: () => '?',
   audioCodec: () => '?',
