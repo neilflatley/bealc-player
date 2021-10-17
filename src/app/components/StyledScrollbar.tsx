@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const StyledScrollbar = styled.div`
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: none;
 
   ::-webkit-scrollbar {
     width: 10px;

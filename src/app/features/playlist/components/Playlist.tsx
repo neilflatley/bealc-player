@@ -1,6 +1,5 @@
 import React from 'react';
 import uniqueID from '~/core/util/unique';
-import { completeApiPath } from '~/features/plex/util';
 import StyledPlaylist from '../components.styled/Playlist.styled';
 
 type Props = {
@@ -41,7 +40,7 @@ const Playlist = ({ playlist, visible, handleClose, handleSelect }: Props) => {
               </button>
             )}{' '}
             <button className="link-button" onClick={() => {}}>
-              {c.title}
+              {c.track && `${c.track}. `} {c.title}
             </button>
           </p>
         </div>

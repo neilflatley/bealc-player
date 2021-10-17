@@ -18,9 +18,17 @@ const StyledModal = Modal.styled`
   }
 `;
 
-const MediaLinkModal = ({ uri }: { uri: string }) => {
+const MediaLinkModal = ({
+  uri,
+  buttonText,
+  copiedText,
+}: {
+  uri: string;
+  buttonText?: string;
+  copiedText?: string;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [copyText, setCopyText] = useState('Copy VLC link');
+  const [copyText, setCopyText] = useState(buttonText || 'Copy VLC link');
 
   const mediaUri = `${window.location.protocol}//${window.location.hostname}:${window.location.port}${uri}`;
 
@@ -29,7 +37,7 @@ const MediaLinkModal = ({ uri }: { uri: string }) => {
   };
 
   const toggleModal = () => {
-    setCopyText('Link copied');
+    setCopyText(copiedText || 'Link copied');
     setIsOpen(!isOpen);
     copyUri();
   };

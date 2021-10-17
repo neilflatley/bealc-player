@@ -33,13 +33,13 @@ const StyledPlayer = styled.div`
     width: 25px;
     height: 25px;
     padding: 0 0 2px 2px;
+    border-radius: 12px;
   }
 
   .play-button:hover {
     background-color: #069;
     color: #eee;
     border: 1px solid #eee;
-    border-radius: 12px;
     opacity: 0.8;
     text-decoration: none;
   }

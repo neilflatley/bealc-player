@@ -34,6 +34,8 @@ export const plexItemMapping = {
         `?X-Plex-Token=${selectedDevice?.accessToken}`
     );
   },
+  track: ({ type, index }) =>
+    ['episode', 'track'].includes(type) ? index : undefined,
   title: 'title',
   artist: 'grandparentTitle',
   album: 'parentTitle',
@@ -75,6 +77,7 @@ export const dlnaItemMapping = {
     $return: (uri: string | string[]) => (Array.isArray(uri) ? uri[0] : uri),
   },
   mediaUri: { $path: 'res', $formatting: viaProxy },
+  track: 'raw.upnp:originalTrackNumber[0]',
   title: 'title',
   artist: 'raw.upnp:artist[0]',
   album,

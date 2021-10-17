@@ -1,5 +1,6 @@
 import React from 'react';
 import StyledScrollbar from '~/components/StyledScrollbar';
+import { symbols } from '~/theme/symbols';
 import StyledNode from '../components.styled/SelectedNode.styled';
 import ContentList from './ContentList';
 
@@ -44,19 +45,30 @@ const SelectedNode = ({
           </p>
         )}
         {imageUri && <img alt={title} src={imageUri} />}
-        <StyledScrollbar style={{ maxHeight: '86px', paddingRight: '10px', marginBottom:'10px' }}>
-          <p style={{ textAlign: 'justify' }}>
-            {description}
-          </p>
+        <StyledScrollbar
+          style={{
+            maxHeight: '86px',
+            paddingRight: '10px',
+            marginBottom: '10px',
+          }}
+        >
+          <p style={{ textAlign: 'justify' }}>{description}</p>
         </StyledScrollbar>
         {playable.length > 0 && (
-          <button
-            className="link-button play-button"
-            onClick={() => handleAddToPlaylist(playable)}
-            style={{ width: '100%' }}
-          >
-            Add to playlist
-          </button>
+          <div>
+            <button
+              className="link-button play-button playlist-button"
+              onClick={() => handleAddToPlaylist(playable)}
+            >
+              {symbols.play} Play
+            </button>
+            <button
+              className="link-button play-button playlist-button"
+              onClick={() => handleAddToPlaylist(playable, false)}
+            >
+              Add to playlist
+            </button>
+          </div>
         )}
         <ContentList content={content} handleSelect={handleSelect} />
       </div>

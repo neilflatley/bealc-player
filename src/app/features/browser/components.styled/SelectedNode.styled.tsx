@@ -19,6 +19,11 @@ const StyledNode = styled(StyledScrollbar)`
   .library-item {
     width: max-content;
   }
+
+  .playlist-button {
+    border: 1px solid #eee;
+    width: 50% !important;
+  }
 `;
 
 export default StyledNode;

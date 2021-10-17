@@ -2,7 +2,9 @@ import {
   ADD_TO_PLAYLIST,
   ADVANCE_PLAYLIST,
   HIDE_PLAYLIST,
+  SET_VOLUME,
   SHOW_PLAYLIST,
+  TOGGLE_PLAYING,
 } from './types';
 
 export const hidePlaylist = () => ({
@@ -19,4 +21,11 @@ export const addToPlaylist = (items: any[], autoPlay = true) => ({
 export const advancePlaylist = (pos?: number) => ({
   type: ADVANCE_PLAYLIST,
   pos,
+});
+export const togglePlayState = () => ({
+  type: TOGGLE_PLAYING,
+});
+export const setVolume = (volume: number) => ({
+  type: SET_VOLUME,
+  volume,
 });

@@ -8,7 +8,7 @@ const StyledPlaylist = styled(StyledScrollbar)`
   );
   height: 100%;
   overflow: auto;
-  padding: 10px 20px;
+  padding: 10px 20px 60px 10px;
 
   #hide {
     float: right;

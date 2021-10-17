@@ -42,7 +42,7 @@ const ContentList = ({ content, handleSelect }: Props) => {
                   handleSelect(id);
                 }}
               >
-                {c.title}
+               {c.track && `${c.track}. `} {c.title}
               </button>
             </p>
           </div>

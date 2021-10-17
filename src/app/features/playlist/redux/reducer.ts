@@ -4,15 +4,20 @@ import {
   ADD_TO_PLAYLIST,
   ADVANCE_PLAYLIST,
   HIDE_PLAYLIST,
+  SET_VOLUME,
   SHOW_PLAYLIST,
+  TOGGLE_PLAYING,
 } from './types';
 
 const initialState = {
   current: [],
+  player: {
+    volume: 0.8,
+    isPlaying: false,
+  },
   visible: false,
 };
 
-const arrayMerge = (_, sourceArray) => sourceArray;
 const combineMerge = (target, source, options) => {
   const destination = target.slice();
 
@@ -42,6 +47,7 @@ export default produce((state: Draft<any>, action) => {
       const newItems = action.items.map(i => ({ ...i }));
       if (action.autoPlay && newItems.length > 0) {
         state.current = state.current.map(i => ({ ...i, isPlaying: false }));
+        state.player.isPlaying = true;
         newItems[0].isPlaying = true;
       }
       state.current = merge(state.current, newItems, { combineMerge });
@@ -57,13 +63,22 @@ export default produce((state: Draft<any>, action) => {
           ? action.pos
           : (currentPos === -1 ? 0 : currentPos) + 1;
 
-      currentlyPlaying.isPlaying = false;
-      if (state.current.length >= nextPos) {
+      if (currentlyPlaying) currentlyPlaying.isPlaying = false;
+      if (state.current.length > nextPos) {
         const nextItem = state.current[nextPos];
         nextItem.isPlaying = true;
       }
       return;
     }
+    case SET_VOLUME: {
+      state.player.volume = action.volume;
+      return;
+    }
+    case TOGGLE_PLAYING: {
+      state.isPlaying = !state.isPlaying;
+      return;
+    }
+
     default:
       return;
   }

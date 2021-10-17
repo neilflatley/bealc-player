@@ -23,6 +23,11 @@ export type SelectedItemProps = {
   local: 'local' | 'remote';
   height: number;
   handlePlayNext: () => void;
+  handleVolume: () => void;
+  player: {
+    isPlaying: boolean;
+    volume: number;
+  };
 };
 
 const SelectedItem = ({
@@ -42,10 +47,13 @@ const SelectedItem = ({
   local,
   height,
   handlePlayNext,
+  handleVolume,
+  player,
 }: SelectedItemProps) => {
-  const [player, setPlayer] = useState(
+  const [playerType, setPlayerType] = useState(
     ['mp3'].includes(format) ? 'audio' : 'video'
   );
+  const [audioPlayer, setAudioPlayer] = useState(null);
 
   const [playerDimensions, setPlayerDimensions] = useState({
     width: 0,
@@ -66,8 +74,17 @@ const SelectedItem = ({
   }, [parentRef, mediaUri]);
 
   useEffect(() => {
-    if (['mp3'].includes(format) ? 'audio' : 'video') setPlayer('audio');
+    if (['mp3'].includes(format) ? 'audio' : 'video') setPlayerType('audio');
   }, [format]);
+
+  useEffect(() => {
+    if (audioPlayer?.audioEl.current)
+      if (player.isPlaying) {
+        audioPlayer.audioEl.current.play();
+      } else {
+        audioPlayer.audioEl.current.pause();
+      }
+  }, [audioPlayer, player.isPlaying]);
 
   if (!title) return null;
   return (
@@ -83,10 +100,10 @@ const SelectedItem = ({
               className="link-button"
               onClick={e => {
                 e.preventDefault();
-                setPlayer(player === 'video' ? 'audio' : 'video');
+                setPlayerType(playerType === 'video' ? 'audio' : 'video');
               }}
             >
-              Use {player === 'video' ? 'audio' : 'video'} player
+              Use {playerType === 'video' ? 'audio' : 'video'} player
             </button>
             <MediaLinkModal uri={mediaUri} />
           </div>
@@ -111,7 +128,7 @@ const SelectedItem = ({
       </div>
       {mediaUri && (
         <div className="media_player_container" ref={parentRef}>
-          {playerDimensions.width && player === 'audio' && (
+          {playerDimensions.width && playerType === 'audio' && (
             <div className="resizable" style={{ paddingTop: '16px' }}>
               <ReactAudioPlayer
                 src={mediaUri}
@@ -120,11 +137,16 @@ const SelectedItem = ({
                 onEnded={() => {
                   handlePlayNext();
                 }}
+                onVolumeChanged={(e) => {
+                  handleVolume(e.target.volume)
+                }}
+                ref={el => setAudioPlayer(el)}
                 style={{ width: '100%' }}
+                volume={player.volume}
               />
             </div>
           )}
-          {playerDimensions.width && player === 'video' && (
+          {playerDimensions.width && playerType === 'video' && (
             <ResizingPane
               className="resizable"
               sides={['top', 'bottom', 'left', 'right']}
@@ -141,6 +163,7 @@ const SelectedItem = ({
                 onEnded={() => {
                   handlePlayNext();
                 }}
+                volume={player.volume}
               />
             </ResizingPane>
           )}
