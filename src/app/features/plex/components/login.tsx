@@ -13,13 +13,7 @@ const Login = ({ submit, devices }) => {
   if (servers?.accessToken)
     return (
       <div>
-        <p>
-          Signed into plex.tv
-          <span style={{ fontSize: '80%', color: '#333' }}>
-            {' '}
-            ({servers?.servers?.length} servers available)
-          </span>
-        </p>
+        <p>Signed into plex.tv</p>
       </div>
     );
   return (

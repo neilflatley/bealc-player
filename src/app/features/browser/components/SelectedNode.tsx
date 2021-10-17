@@ -5,6 +5,7 @@ import StyledNode from '../components.styled/SelectedNode.styled';
 import ContentList from './ContentList';
 
 type Props = {
+  className: string;
   node: any;
   content: any[];
   handleAddToPlaylist: (items: any[]) => void;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const SelectedNode = ({
+  className,
   node,
   content,
   handleAddToPlaylist,
@@ -29,7 +31,7 @@ const SelectedNode = ({
     (Array.isArray(content) && content?.filter(c => c.canPlay)) || [];
 
   return (
-    <StyledNode>
+    <StyledNode className={className}>
       <div>
         <h2>{title}</h2>
         {node.error && <p style={{ color: 'red' }}>{node.error}</p>}
@@ -52,7 +54,7 @@ const SelectedNode = ({
             marginBottom: '10px',
           }}
         >
-          <p style={{ textAlign: 'justify' }}>{description}</p>
+          <p className="description" style={{ textAlign: 'justify' }}>{description}</p>
         </StyledScrollbar>
         {playable.length > 0 && (
           <div>
@@ -70,7 +72,11 @@ const SelectedNode = ({
             </button>
           </div>
         )}
-        <ContentList content={content} handleSelect={handleSelect} />
+        <ContentList
+          content={content}
+          handleAddToPlaylist={handleAddToPlaylist}
+          handleSelect={handleSelect}
+        />
       </div>
     </StyledNode>
   );

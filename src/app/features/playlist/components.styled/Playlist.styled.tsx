@@ -10,12 +10,16 @@ const StyledPlaylist = styled(StyledScrollbar)`
   overflow: auto;
   padding: 10px 20px 60px 10px;
 
-  #hide {
+  .buttons-container {
     float: right;
   }
 
   .playlist-item {
     width: max-content;
+  }
+
+  .artist {
+    color: #444;
   }
 `;
 

@@ -1,6 +1,7 @@
 import {
   ADD_TO_PLAYLIST,
   ADVANCE_PLAYLIST,
+  CLEAR_PLAYLIST,
   HIDE_PLAYLIST,
   SET_VOLUME,
   SHOW_PLAYLIST,
@@ -12,6 +13,9 @@ export const hidePlaylist = () => ({
 });
 export const showPlaylist = () => ({
   type: SHOW_PLAYLIST,
+});
+export const clearPlaylist = () => ({
+  type: CLEAR_PLAYLIST,
 });
 export const addToPlaylist = (items: any[], autoPlay = true) => ({
   type: ADD_TO_PLAYLIST,

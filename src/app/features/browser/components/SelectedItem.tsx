@@ -3,9 +3,9 @@ import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import ResizingPane from 'react-resizing-pane';
 import StyledItem from '../components.styled/SelectedItem.styled';
-import MediaLinkModal from '../../../components/MediaLinkModal';
 
 export type SelectedItemProps = {
+  className: string;
   autoPlay: boolean;
   imageUri: string;
   thumbUri: string;
@@ -31,6 +31,7 @@ export type SelectedItemProps = {
 };
 
 const SelectedItem = ({
+  className,
   autoPlay,
   imageUri,
   thumbUri,
@@ -88,14 +89,13 @@ const SelectedItem = ({
 
   if (!title) return null;
   return (
-    <StyledItem imageUri={imageUri}>
+    <StyledItem imageUri={imageUri} className={className}>
       <div className="item_info">
         <div className="thumb_column">
           {thumbUri && <img key={thumbUri} src={thumbUri} alt={title} />}
         </div>
         <div className="info_column">
           <div className="info_column_main">
-            <span style={{ color: '#ccc' }}>{local}</span>
             <button
               className="link-button"
               onClick={e => {
@@ -104,20 +104,19 @@ const SelectedItem = ({
               }}
             >
               Use {playerType === 'video' ? 'audio' : 'video'} player
-            </button>
-            <MediaLinkModal uri={mediaUri} />
-          </div>
-          <h2>{title}</h2>
-          <h3>
-            {album} [{year}] {artist && <span> - {artist}</span>}
-            {duration && <span className="duration"> {duration}</span>}
+            </button>{' '}
             {format && (
               <span className="format" title={`${videoCodec} / ${audioCodec}`}>
                 {' '}
                 {format}
               </span>
             )}
+          </div>
+          <h2>{title}</h2>
+          <h3>
+            {album} {year && `[${year}]`} {artist && <span> - {artist}</span>}
           </h3>
+          {duration && <span className="duration"> {duration}</span>}
 
           {summary && (
             <div className="summary">
@@ -137,8 +136,8 @@ const SelectedItem = ({
                 onEnded={() => {
                   handlePlayNext();
                 }}
-                onVolumeChanged={(e) => {
-                  handleVolume(e.target.volume)
+                onVolumeChanged={e => {
+                  handleVolume(e.target.volume);
                 }}
                 ref={el => setAudioPlayer(el)}
                 style={{ width: '100%' }}

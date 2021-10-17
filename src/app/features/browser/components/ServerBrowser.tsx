@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useMediaQuery } from 'react-responsive';
 import ResizingPane from 'react-resizing-pane';
 
 import SelectedItem from '~/features/browser/components/SelectedItem';
@@ -17,6 +18,7 @@ import {
 import {
   addToPlaylist,
   advancePlaylist,
+  clearPlaylist,
   hidePlaylist,
   setVolume,
   showPlaylist,
@@ -38,12 +40,73 @@ const StyledBrowser = styled.div`
 
   border-radius: 5px;
   display: grid;
-  grid-template-columns: ${p => (p.columns === 3 ? '1fr 1fr 8fr' : '1fr 9fr')};
+  grid-gap: 0.5rem;
+
   min-width: 100%;
   padding: 10px 10px 70px 10px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(1, 1fr);
+
+    .selected-node {
+      ${p =>
+        p.nowPlaying ? 'border-radius: 15px 15px 0 0;' : 'border-radius: 15px'}
+    }
+
+    .playlist {
+      border-radius: 0;
+    }
+
+    .selected-item {
+      grid-column: span 1;
+      border-radius: 0 0 15px 15px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+
+    .selected-node {
+      border-radius: 15px 0 0 0;
+    }
+
+    .playlist {
+      border-radius: 0 15px 0 0;
+    }
+
+    .selected-item {
+      grid-column: span 2;
+      border-radius: 0 0 15px 15px;
+    }
+  }
+  @media (min-width: 1250px) {
+    grid-template-columns: ${p =>
+      p.columns === 3 ? '1fr 1fr 8fr' : '1fr 9fr'};
+
+    .selected-node {
+      border-radius: 15px 0 0 15px;
+    }
+
+    .playlist {
+      border-radius: 0;
+    }
+
+    .selected-item {
+      grid-column: span 1;
+      border-radius: 0 15px 15px 0;
+    }
+  }
 `;
 
+const NotResizable = ({ children, style }) => {
+  return <div style={style}>{children}</div>;
+};
+
 const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
+  const isBigScreen = useMediaQuery({ query: '(min-width: 1250px)' });
+
+  const Resizable = isBigScreen ? ResizingPane : NotResizable;
+
   const dispatch = useDispatch();
   const selectedDevice = useSelector(selectCurrentDevice);
   const selectedItem = useSelector(selectCurrentItem);
@@ -69,6 +132,11 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
     dispatch(selectContentNode(selectedDevice, deviceType, id, autoPlay));
   };
 
+  const handleAddToPlaylist = (content: any[], autoPlay = true) => {
+    dispatch(addToPlaylist(content, autoPlay));
+    dispatch(showPlaylist());
+  };
+
   const handlePlayNext = (pos?: number) => {
     dispatch(advancePlaylist(pos));
   };
@@ -78,8 +146,8 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
 
   return (
     <>
-      <StyledBrowser columns={columns}>
-        <ResizingPane
+      <StyledBrowser columns={columns} nowPlaying={nowPlaying}>
+        <Resizable
           storageId={1}
           sides={['left', 'right']}
           style={{
@@ -89,20 +157,18 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
           }}
         >
           <SelectedNode
+            className="selected-node"
             node={node}
             content={content}
-            handleAddToPlaylist={(content: any[], autoPlay = true) => {
-              dispatch(addToPlaylist(content, autoPlay));
-              dispatch(showPlaylist());
-            }}
+            handleAddToPlaylist={handleAddToPlaylist}
             handleSelect={handleSelect}
             handleBack={(id: string) => {
               dispatch(selectContentNode(selectedDevice, deviceType, id));
             }}
           />
-        </ResizingPane>
+        </Resizable>
         {playlistVisible && (
-          <ResizingPane
+          <Resizable
             storageId={2}
             sides={['right']}
             style={{
@@ -112,16 +178,21 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
             }}
           >
             <Playlist
+              className="playlist"
               playlist={currentPlaylist}
               visible={playlistVisible}
+              handleClear={() => {
+                dispatch(clearPlaylist());
+              }}
               handleClose={() => {
                 dispatch(hidePlaylist());
               }}
               handleSelect={handlePlayNext}
             />
-          </ResizingPane>
+          </Resizable>
         )}
         <SelectedItem
+          className="selected-item"
           autoPlay={autoPlay}
           {...nowPlaying}
           player={{ isPlaying, volume }}

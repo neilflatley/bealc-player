@@ -3,6 +3,7 @@ import merge from 'deepmerge';
 import {
   ADD_TO_PLAYLIST,
   ADVANCE_PLAYLIST,
+  CLEAR_PLAYLIST,
   HIDE_PLAYLIST,
   SET_VOLUME,
   SHOW_PLAYLIST,
@@ -43,6 +44,16 @@ export default produce((state: Draft<any>, action) => {
       state.visible = false;
       return;
     }
+    case CLEAR_PLAYLIST: {
+      const nowPlaying = state.current.find(i => i.isPlaying);
+
+      if (nowPlaying && state.current.length > 1) state.current = [nowPlaying];
+      else {
+        state.current = [];
+        state.player.isPlaying = false;
+      }
+      return;
+    }
     case ADD_TO_PLAYLIST: {
       const newItems = action.items.map(i => ({ ...i }));
       if (action.autoPlay && newItems.length > 0) {
@@ -50,7 +61,9 @@ export default produce((state: Draft<any>, action) => {
         state.player.isPlaying = true;
         newItems[0].isPlaying = true;
       }
-      state.current = merge(state.current, newItems, { combineMerge });
+      state.current = merge(state.current, newItems, {
+        combineMerge,
+      });
       return;
     }
     case ADVANCE_PLAYLIST: {
@@ -67,6 +80,9 @@ export default produce((state: Draft<any>, action) => {
       if (state.current.length > nextPos) {
         const nextItem = state.current[nextPos];
         nextItem.isPlaying = true;
+        state.player.isPlaying = true;
+      } else {
+        state.player.isPlaying = false;
       }
       return;
     }
@@ -75,7 +91,7 @@ export default produce((state: Draft<any>, action) => {
       return;
     }
     case TOGGLE_PLAYING: {
-      state.isPlaying = !state.isPlaying;
+      state.player.isPlaying = !state.player.isPlaying;
       return;
     }
 

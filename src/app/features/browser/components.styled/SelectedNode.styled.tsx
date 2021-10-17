@@ -6,7 +6,6 @@ const StyledNode = styled(StyledScrollbar)`
     rgba(255, 255, 255, 0.3),
     rgba(255, 255, 255, 0.3)
   );
-  border-radius: 15px 0 0 15px;
   height: 100%;
   overflow: auto;
   padding: 10px 20px;
@@ -15,6 +14,14 @@ const StyledNode = styled(StyledScrollbar)`
     max-width: 100%;
     max-height: 200px;
   }
+  @media (max-width: 900px) {
+    img {
+      max-height: 100px;
+    }
+    .description {
+      display: none;
+    }
+  }
 
   .library-item {
     width: max-content;
@@ -22,7 +29,10 @@ const StyledNode = styled(StyledScrollbar)`
 
   .playlist-button {
     border: 1px solid #eee;
-    width: 50% !important;
+    background: rgba(0, 0, 0, 0.5);
+    color: #1db954;
+    width: 47% !important;
+    margin: 0 1%;
   }
 `;
 
