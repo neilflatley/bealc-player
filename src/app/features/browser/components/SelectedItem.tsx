@@ -22,6 +22,7 @@ export type SelectedItemProps = {
   audioCodec: string;
   local: 'local' | 'remote';
   height: number;
+  handlePlayNext: () => void;
 };
 
 const SelectedItem = ({
@@ -40,6 +41,7 @@ const SelectedItem = ({
   audioCodec,
   local,
   height,
+  handlePlayNext,
 }: SelectedItemProps) => {
   const [player, setPlayer] = useState(
     ['mp3'].includes(format) ? 'audio' : 'video'
@@ -115,6 +117,9 @@ const SelectedItem = ({
                 src={mediaUri}
                 autoPlay
                 controls
+                onEnded={() => {
+                  handlePlayNext();
+                }}
                 style={{ width: '100%' }}
               />
             </div>
@@ -133,6 +138,9 @@ const SelectedItem = ({
                 url={mediaUri}
                 width="100%"
                 height="100%"
+                onEnded={() => {
+                  handlePlayNext();
+                }}
               />
             </ResizingPane>
           )}

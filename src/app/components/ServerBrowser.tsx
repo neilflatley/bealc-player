@@ -14,6 +14,17 @@ import {
   selectCurrentItem,
   selectCurrentNode,
 } from '~/features/browser/redux/selectors';
+import {
+  addToPlaylist,
+  advancePlaylist,
+  hidePlaylist,
+  showPlaylist,
+} from '~/features/playlist/redux/actions';
+import {
+  selectCurrentPlaylist,
+  selectShowPlaylist,
+} from '~/features/playlist/redux/selectors';
+import Playlist from '~/features/playlist/components/Playlist';
 
 const StyledBrowser = styled.div`
   /* fill remaining height */
@@ -23,7 +34,7 @@ const StyledBrowser = styled.div`
 
   border-radius: 5px;
   display: grid;
-  grid-template-columns: 1fr 9fr;
+  grid-template-columns: ${p => (p.columns === 3 ? '1fr 1fr 8fr' : '1fr 9fr')};
   min-width: 100%;
   padding: 10px;
 `;
@@ -33,13 +44,30 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
   const selectedDevice = useSelector(selectCurrentDevice);
   const selectedItem = useSelector(selectCurrentItem);
   const selectedNode = useSelector(selectCurrentNode);
+  const currentPlaylist = useSelector(selectCurrentPlaylist);
+  const currentlyPlaying = currentPlaylist.find(i => i.isPlaying);
+  const playlistVisible = useSelector(selectShowPlaylist);
   const autoPlay = useSelector(state => state.browser.autoPlay);
 
   if (typeof window === 'undefined') return null;
+
+  const node = selectedNode || selectedDevice;
+  const content = node?.children || node?.content;
+
+  const columns = playlistVisible ? 3 : 2;
+
+  const handleSelect = (id = '0', autoPlay = false) => {
+    dispatch(browseServer(selectedDevice, deviceType, id));
+    dispatch(selectContentNode(selectedDevice, deviceType, id, autoPlay));
+  };
+
+  const handlePlayNext = (pos?: number) => {
+    dispatch(advancePlaylist(pos));
+  };
+
   return (
-    <StyledBrowser>
+    <StyledBrowser columns={columns}>
       <ResizingPane
-        height={550}
         storageId={1}
         sides={['left', 'right']}
         style={{
@@ -49,19 +77,43 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
         }}
       >
         <SelectedNode
-          node={selectedNode || selectedDevice}
-          handleSelect={(id = '0', autoPlay = false) => {
-            dispatch(browseServer(selectedDevice, deviceType, id));
-            dispatch(
-              selectContentNode(selectedDevice, deviceType, id, autoPlay)
-            );
+          node={node}
+          content={content}
+          handleAddToPlaylist={(content: any[], autoPlay = true) => {
+            dispatch(addToPlaylist(content, autoPlay));
+            dispatch(showPlaylist());
           }}
+          handleSelect={handleSelect}
           handleBack={(id: string) => {
             dispatch(selectContentNode(selectedDevice, deviceType, id));
           }}
         />
       </ResizingPane>
-      <SelectedItem autoPlay={autoPlay} {...selectedItem} />
+      {playlistVisible && (
+        <ResizingPane
+          storageId={2}
+          sides={['right']}
+          style={{
+            minHeight: '100%',
+            minWidth: '120px',
+            border: 'none',
+          }}
+        >
+          <Playlist
+            playlist={currentPlaylist}
+            visible={playlistVisible}
+            handleClose={() => {
+              dispatch(hidePlaylist());
+            }}
+            handleSelect={handlePlayNext}
+          />
+        </ResizingPane>
+      )}
+      <SelectedItem
+        autoPlay={autoPlay}
+        {...(currentlyPlaying || selectedItem)}
+        handlePlayNext={handlePlayNext}
+      />
     </StyledBrowser>
   );
 };

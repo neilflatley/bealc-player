@@ -1,19 +1,32 @@
 import React from 'react';
+import StyledScrollbar from '~/components/StyledScrollbar';
 import StyledNode from '../components.styled/SelectedNode.styled';
 import ContentList from './ContentList';
 
 type Props = {
   node: any;
+  content: any[];
+  handleAddToPlaylist: (items: any[]) => void;
   handleBack: (id: string) => void;
   handleSelect: (id: string) => void;
 };
 
-const SelectedNode = ({ node, handleSelect, handleBack }: Props) => {
+const SelectedNode = ({
+  node,
+  content,
+  handleAddToPlaylist,
+  handleSelect,
+  handleBack,
+}: Props) => {
   if (!node) return null;
   const title = node.title || node.name;
   const description = node.summary || '';
-  const imageUri = node.imageUri || node.thumbUri;
+  const imageUri = node.thumbUri || node.imageUri;
   const goBackTo = node.parentID || node.path;
+
+  const playable =
+    (Array.isArray(content) && content?.filter(c => c.canPlay)) || [];
+
   return (
     <StyledNode>
       <div>
@@ -31,14 +44,21 @@ const SelectedNode = ({ node, handleSelect, handleBack }: Props) => {
           </p>
         )}
         {imageUri && <img alt={title} src={imageUri} />}
-        <p style={{textAlign:'justify'}}>
-          {description.substring(0, 200)}
-          {description.length > 200 ? '...' : ''}
-        </p>
-        <ContentList
-          content={node.children || node.content}
-          handleSelect={handleSelect}
-        />
+        <StyledScrollbar style={{ maxHeight: '86px', paddingRight: '10px', marginBottom:'10px' }}>
+          <p style={{ textAlign: 'justify' }}>
+            {description}
+          </p>
+        </StyledScrollbar>
+        {playable.length > 0 && (
+          <button
+            className="link-button play-button"
+            onClick={() => handleAddToPlaylist(playable)}
+            style={{ width: '100%' }}
+          >
+            Add to playlist
+          </button>
+        )}
+        <ContentList content={content} handleSelect={handleSelect} />
       </div>
     </StyledNode>
   );

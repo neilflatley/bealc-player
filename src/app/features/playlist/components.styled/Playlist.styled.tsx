@@ -1,24 +1,22 @@
 import styled from 'styled-components';
 import StyledScrollbar from '~/components/StyledScrollbar';
 
-const StyledNode = styled(StyledScrollbar)`
+const StyledPlaylist = styled(StyledScrollbar)`
   background: linear-gradient(
-    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.2),
     rgba(255, 255, 255, 0.3)
   );
-  border-radius: 15px 0 0 15px;
   height: 100%;
   overflow: auto;
   padding: 10px 20px;
 
-  img {
-    max-width: 100%;
-    max-height: 200px;
+  #hide {
+    float: right;
   }
 
-  .library-item {
+  .playlist-item {
     width: max-content;
   }
 `;
 
-export default StyledNode;
+export default StyledPlaylist;

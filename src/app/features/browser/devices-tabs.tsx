@@ -7,6 +7,7 @@ import StyledTabs from '~/components/StyledTabs';
 
 import DeviceDiscovery from '~/features/device-discovery';
 import PlexLibrary from '~/features/plex';
+import { showPlaylist } from '../playlist/redux/actions';
 import { setDeviceType } from './redux/actions';
 import { selectCurrentDeviceType } from './redux/selectors';
 
@@ -17,6 +18,12 @@ const DevicesTabs = () => {
   return (
     <StyledPlayer>
       <h1 className="logo">BeaLC Player</h1>
+      <button
+        onClick={() => dispatch(showPlaylist())}
+        style={{ float: 'right' }}
+      >
+        Playlist
+      </button>
       <StyledTabs>
         <Tabs
           onSelect={index => {

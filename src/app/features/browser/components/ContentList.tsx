@@ -12,38 +12,40 @@ const ContentList = ({ content, handleSelect }: Props) => {
     <div>
       {Array.isArray(content) &&
         content.map(c => (
-          <p key={uniqueID()}>
-            {' '}
-            {c.canPlay && (
+          <div key={uniqueID()} className="library-item">
+            <p>
+              {' '}
+              {c.canPlay && (
+                <button
+                  className="link-button play-button"
+                  onClick={() => {
+                    const id =
+                      c.id ||
+                      (c.key?.startsWith('/')
+                        ? c.key
+                        : completeApiPath(`${c.path}/${c.key}`));
+                    handleSelect(id, true);
+                  }}
+                  title={`Play ${c.title} [${c.duration}]`}
+                >
+                  ▶
+                </button>
+              )}{' '}
               <button
-                className="link-button play-button"
+                className="link-button"
                 onClick={() => {
                   const id =
                     c.id ||
                     (c.key?.startsWith('/')
                       ? c.key
                       : completeApiPath(`${c.path}/${c.key}`));
-                  handleSelect(id, true);
+                  handleSelect(id);
                 }}
-                title={`Play ${c.title} [${c.duration}]`}
               >
-                ▶
+                {c.title}
               </button>
-            )}{' '}
-            <button
-              className="link-button"
-              onClick={() => {
-                const id =
-                  c.id ||
-                  (c.key?.startsWith('/')
-                    ? c.key
-                    : completeApiPath(`${c.path}/${c.key}`));
-                handleSelect(id);
-              }}
-            >
-              {c.title}
-            </button>
-          </p>
+            </p>
+          </div>
         ))}
     </div>
   );

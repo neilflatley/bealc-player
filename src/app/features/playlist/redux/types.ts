@@ -1,0 +1,8 @@
+const PREFIX = 'PLAYLIST/';
+export const SHOW_PLAYLIST = `${PREFIX}SHOW`;
+export const HIDE_PLAYLIST = `${PREFIX}HIDE`;
+export const ADD_TO_PLAYLIST = `${PREFIX}ADD`;
+export const ADVANCE_PLAYLIST = `${PREFIX}ADVANCE`;
+export const DELETE_FROM_PLAYLIST = `${PREFIX}DELETE_FROM`;
+export const CLEAR_PLAYLIST = `${PREFIX}CLEAR`;
+export const SAVE_PLAYLIST = `${PREFIX}SAVE`;
