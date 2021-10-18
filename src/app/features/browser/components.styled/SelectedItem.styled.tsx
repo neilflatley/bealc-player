@@ -28,14 +28,15 @@ const StyledItem = styled.div`
     float: right;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 650px) {
     .item_info {
       grid-template-columns: 60px 7fr;
     }
     .item_info .thumb_column img {
       width: 50px;
     }
-    .item_info .duration {
+    .item_info .duration,
+    .summary {
       display: none;
     }
   }

@@ -14,7 +14,7 @@ const StyledNode = styled(StyledScrollbar)`
     max-width: 100%;
     max-height: 200px;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 650px) {
     img {
       max-height: 100px;
     }

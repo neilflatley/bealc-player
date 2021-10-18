@@ -2,9 +2,10 @@ import React from 'react';
 import { StyledSlider, Thumb, Track } from './Slider.styled';
 
 type Props = {
-  volume: number;
+  played: number;
+  loaded: number;
   onChange: (volume: number | readonly number[], index: number) => void;
-  styling: {
+  styling?: {
     width?: string;
     height?: string;
     thumbSize?: string;
@@ -12,14 +13,15 @@ type Props = {
   };
 };
 
-const Volume = ({
-  volume,
+const Progress = ({
+  played,
+  loaded,
   onChange,
   styling: {
-    width = '100px',
-    height = '8px',
-    thumbSize = '14px',
-    thumbOffset = '-3px',
+    width = '200px',
+    height = '14px',
+    thumbSize = '16px',
+    thumbOffset = '-1px',
   } = {},
 }: Props) => {
   return (
@@ -31,12 +33,12 @@ const Volume = ({
       renderThumb={(p, s) =>
         Thumb({ ...p, size: thumbSize, topOffset: thumbOffset }, s)
       }
-      step={0.05}
-      value={volume}
+      step={0.01}
+      value={[played, loaded]}
       width={width}
       height={height}
     />
   );
 };
 
-export default Volume;
+export default Progress;

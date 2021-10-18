@@ -20,12 +20,14 @@ import {
   advancePlaylist,
   clearPlaylist,
   hidePlaylist,
+  setProgress,
   setVolume,
   showPlaylist,
 } from '~/features/playlist/redux/actions';
 import {
   selectCurrentPlaylist,
   selectIsPlaying,
+  selectProgress,
   selectShowPlaylist,
   selectVolume,
 } from '~/features/playlist/redux/selectors';
@@ -45,7 +47,7 @@ const StyledBrowser = styled.div`
   min-width: 100%;
   padding: 10px 10px 70px 10px;
 
-  @media (max-width: 900px) {
+  @media (max-width: 650px) {
     grid-template-columns: repeat(1, 1fr);
 
     .selected-node {
@@ -63,15 +65,27 @@ const StyledBrowser = styled.div`
     }
   }
 
-  @media (min-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (min-width: 650px) {
+    grid-template-columns: ${p => (p.columns === 3 ? 'repeat(2, 1fr)' : '1fr')};
 
     .selected-node {
-      border-radius: 15px 0 0 0;
+      ${p =>
+        p.columns === 3 && p.nowPlaying
+          ? 'border-radius: 15px 0 0 0;'
+          : p.columns === 3
+          ? 'border-radius: 15px 0 0 15px;'
+          : p.columns === 2 && p.nowPlaying
+          ? 'border-radius: 15px 15px 0 0;'
+          : p.columns === 2
+          ? 'border-radius: 15px;'
+          : ''}
     }
 
     .playlist {
-      border-radius: 0 15px 0 0;
+      ${p =>
+        p.nowPlaying
+          ? 'border-radius: 0 15px 0 0;'
+          : 'border-radius: 0 15px 15px 0;'}
     }
 
     .selected-item {
@@ -104,6 +118,8 @@ const NotResizable = ({ children, style }) => {
 
 const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
   const isBigScreen = useMediaQuery({ query: '(min-width: 1250px)' });
+  const isTablet = useMediaQuery({ query: '(min-width: 650px)' });
+  const viewMode = isBigScreen ? 0 : isTablet ? 1 : 2;
 
   const Resizable = isBigScreen ? ResizingPane : NotResizable;
 
@@ -114,6 +130,7 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
   const currentPlaylist = useSelector(selectCurrentPlaylist);
   const currentlyPlaying = currentPlaylist.find(i => i.isPlaying);
   const isPlaying = useSelector(selectIsPlaying);
+  const progress = useSelector(selectProgress);
   const volume = useSelector(selectVolume);
   const playlistVisible = useSelector(selectShowPlaylist);
   const autoPlay = useSelector(state => state.browser.autoPlay);
@@ -137,8 +154,16 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
     dispatch(showPlaylist());
   };
 
-  const handlePlayNext = (pos?: number) => {
+  const handlePlayNext = (pos?: number, el?: HTMLAudioElement) => {
     dispatch(advancePlaylist(pos));
+  };
+  const handleProgress = (progress: {
+    played: number;
+    playedSeconds: number;
+    loaded: number;
+    loadedSeconds: number;
+  }) => {
+    dispatch(setProgress(progress));
   };
   const handleVolume = (volume: number) => {
     dispatch(setVolume(volume));
@@ -197,14 +222,18 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
           {...nowPlaying}
           player={{ isPlaying, volume }}
           handlePlayNext={handlePlayNext}
+          handleProgress={handleProgress}
           handleVolume={handleVolume}
         />
       </StyledBrowser>
       <NowPlayingFooter
         handleSkip={handlePlayNext}
+        loaded={progress.loaded}
+        played={progress.played}
         volume={volume}
         handleVolume={handleVolume}
         nowPlaying={nowPlaying}
+        viewMode={viewMode}
       />
     </>
   );

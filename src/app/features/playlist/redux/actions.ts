@@ -3,6 +3,7 @@ import {
   ADVANCE_PLAYLIST,
   CLEAR_PLAYLIST,
   HIDE_PLAYLIST,
+  PLAYER_PROGRESS,
   SET_VOLUME,
   SHOW_PLAYLIST,
   TOGGLE_PLAYING,
@@ -32,4 +33,8 @@ export const togglePlayState = () => ({
 export const setVolume = (volume: number) => ({
   type: SET_VOLUME,
   volume,
+});
+export const setProgress = (progress: any) => ({
+  type: PLAYER_PROGRESS,
+  progress,
 });

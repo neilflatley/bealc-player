@@ -5,6 +5,7 @@ import {
   ADVANCE_PLAYLIST,
   CLEAR_PLAYLIST,
   HIDE_PLAYLIST,
+  PLAYER_PROGRESS,
   SET_VOLUME,
   SHOW_PLAYLIST,
   TOGGLE_PLAYING,
@@ -15,6 +16,12 @@ const initialState = {
   player: {
     volume: 0.8,
     isPlaying: false,
+    progress: {
+      played: 0.0,
+      playedSeconds: 0.0,
+      loaded: 0.0,
+      loadedSeconds: 0.0,
+    },
   },
   visible: false,
 };
@@ -94,7 +101,10 @@ export default produce((state: Draft<any>, action) => {
       state.player.isPlaying = !state.player.isPlaying;
       return;
     }
-
+    case PLAYER_PROGRESS: {
+      state.player.progress = action.progress;
+      return;
+    }
     default:
       return;
   }

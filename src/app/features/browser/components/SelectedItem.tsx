@@ -23,6 +23,7 @@ export type SelectedItemProps = {
   local: 'local' | 'remote';
   height: number;
   handlePlayNext: () => void;
+  handleProgress: (progress: any) => void;
   handleVolume: () => void;
   player: {
     isPlaying: boolean;
@@ -48,6 +49,7 @@ const SelectedItem = ({
   local,
   height,
   handlePlayNext,
+  handleProgress,
   handleVolume,
   player,
 }: SelectedItemProps) => {
@@ -69,13 +71,17 @@ const SelectedItem = ({
       const parentWidth = parentRef.current.offsetWidth;
       setPlayerDimensions({
         width: parentWidth - 20,
-        height: parentHeight,
+        height: parentHeight - 160,
       });
     }
   }, [parentRef, mediaUri]);
 
   useEffect(() => {
-    if (['mp3'].includes(format) ? 'audio' : 'video') setPlayerType('audio');
+    if (['mp3'].includes(format))
+      setPlayerType('audio');
+    else
+      setPlayerType('video');
+    
   }, [format]);
 
   useEffect(() => {
@@ -149,18 +155,21 @@ const SelectedItem = ({
             <ResizingPane
               className="resizable"
               sides={['top', 'bottom', 'left', 'right']}
-              height={height}
+              height={playerDimensions.height}
               width={playerDimensions.width && playerDimensions.width}
             >
               <ReactPlayer
-                playing={autoPlay}
                 controls
                 light={!autoPlay ? thumbUri || imageUri : undefined}
+                playing={player.isPlaying}
                 url={mediaUri}
                 width="100%"
                 height="100%"
                 onEnded={() => {
                   handlePlayNext();
+                }}
+                onProgress={progress => {
+                  handleProgress(progress);
                 }}
                 volume={player.volume}
               />
