@@ -51,7 +51,7 @@ const Progress = ({
     }
 
     const resizeObserver = new ResizeObserver(() => {
-      sliderRef.current.resize();
+      sliderRef.current?.resize();
     });
     resizeObserver.observe(containerRef.current);
 
