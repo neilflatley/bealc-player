@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { hot } from 'react-hot-loader';
-import { Route, Switch, useParams } from 'react-router';
 
 import { ThemeProvider } from 'styled-components';
 import { ModalProvider } from 'styled-react-modal';
+import { RouteLoader } from '@zengenti/contensis-react-base/routing';
 import { Loading } from '~/core/routes/Loading';
+import NotFound from '~/pages/NotFound';
 import { selectRouteLoading } from './core/redux/selectors';
 
 import GlobalStyle from '~/theme/globalStyles';
 import { defaultTheme } from './theme';
 import { AppRootProps } from '@zengenti/contensis-react-base';
-import { HashRouter } from 'react-router-dom';
-import { HomePage } from './dynamic/pages';
-import StyledPlayer from './components/StyledPlayer';
-import { selectCurrentDeviceType } from './features/browser/redux/selectors';
-import ServerBrowser from './features/browser/components/ServerBrowser';
 
 const AppRoot = (props: AppRootProps) => {
   const stateLoading = useSelector(selectRouteLoading);
   const [isLoading, setIsLoading] = useState(stateLoading);
-
-  const deviceType = useSelector(selectCurrentDeviceType);
-  const { server } = useParams();
-
   useEffect(() => {
     setIsLoading(stateLoading);
   }, [stateLoading]);
@@ -48,19 +40,7 @@ const AppRoot = (props: AppRootProps) => {
           <ModalProvider>
             <GlobalStyle />
             {isLoading && <Loading />}
-            {/* <RouteLoader {...props} notFoundComponent={NotFound} /> */}
-            <StyledPlayer>
-              <HashRouter>
-                <Switch>
-                  <Route exact path="/">
-                    <HomePage />
-                  </Route>
-                  <Route path="/server/:server">
-                    <ServerBrowser deviceType={deviceType} server={server} />
-                  </Route>
-                </Switch>
-              </HashRouter>
-            </StyledPlayer>
+            <RouteLoader {...props} notFoundComponent={NotFound} />
           </ModalProvider>
         </ThemeProvider>
       </div>

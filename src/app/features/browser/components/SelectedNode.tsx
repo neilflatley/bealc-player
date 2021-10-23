@@ -37,7 +37,7 @@ const SelectedNode = ({
     <StyledNode className={className} imageUri={imageUri}>
       <div className="info-panel">
         {imageUri && (
-          <div>
+          <div className="image-panel">
             <img alt={title} src={imageUri} />
           </div>
         )}
