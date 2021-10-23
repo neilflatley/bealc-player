@@ -14,6 +14,7 @@ const StyledItem = styled(StyledDiv)`
 
   .media_player_container {
     flex-grow: 1;
+    max-height: 70vh;
     padding: 10px 10px 0 10px;
   }
   .media_player_container .resizable {
@@ -35,6 +36,9 @@ const StyledItem = styled(StyledDiv)`
     margin: 10px;
     padding: 10px 10px 5px 10px;
   }
+  .item_info .thumb_column {
+    text-align: center;
+  }
   .item_info .thumb_column img {
     border-radius: 15px;
     width: 100px;
@@ -48,8 +52,14 @@ const StyledItem = styled(StyledDiv)`
     height: 100%;
     width: 100%;
   }
+
+  @media ${({ theme }) => theme.mq.mobile} {
+    min-height: 10vh;
+  }
+  @media ${({ theme }) => theme.mq.tablet} {
+    height: 60vh;
+  }
   @media ${({ theme }) => `${theme.mq.mobile}, ${theme.mq.tablet}`} {
-    max-height: 50vh;
     .media_player_container {
       height: 75%;
     }
@@ -67,7 +77,9 @@ const StyledItem = styled(StyledDiv)`
     }
     .item_info .thumb_column img {
       border-radius: 5px;
-      width: 45px;
+      max-height: 45px;
+      max-width: 45px;
+      width: auto;
     }
     .item_info .summary {
       display: none;

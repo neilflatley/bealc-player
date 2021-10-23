@@ -265,11 +265,11 @@ const SelectedItem = ({
         {thumbUri && (
           <div className="thumb_column">
             <img key={thumbUri} src={thumbUri} alt={title} />
-            {[2].includes(viewMode) ? (
+            {/* {[2].includes(viewMode) ? (
               <div>
                 <MediaFormatButtons />
               </div>
-            ) : null}
+            ) : null} */}
           </div>
         )}
         <div className="info_column">
@@ -278,7 +278,8 @@ const SelectedItem = ({
             {album} {year && `[${year}]`} {artist && <span> - {artist}</span>}
           </h3>
           {duration && <span className="duration"> {duration}</span>}{' '}
-          {[0, 1].includes(viewMode) ? <MediaFormatButtons /> : null}
+          {/* {[0, 1].includes(viewMode) ? <MediaFormatButtons /> : null} */}
+          <MediaFormatButtons />
           {summary && (
             <div className="summary">
               <p>{summary}</p>

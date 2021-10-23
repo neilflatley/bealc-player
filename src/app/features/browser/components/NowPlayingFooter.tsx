@@ -170,8 +170,8 @@ const NowPlayingFooter = ({
           <span className="played">{formatSeconds(playProgress)}</span>
         </div>
       ) : null}
-      {viewMode < 2 && (
-        <div className="progress-container">
+      <div className="progress-container">
+        {viewMode < 2 && (
           <Progress
             duration={progress?.duration}
             played={playProgress}
@@ -183,8 +183,8 @@ const NowPlayingFooter = ({
               thumbSize: ['16px', '8px', '8px'][viewMode],
             }}
           />
-        </div>
-      )}
+        )}
+      </div>
       {progress?.duration && (
         <div className="time-container">
           <span className="played">{formatSeconds(progress?.duration)}</span>

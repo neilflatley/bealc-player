@@ -1,6 +1,6 @@
 export const sizes = {
   mobile: '400px',
-  tablet: '550px',
+  tablet: '650px',
   desktop: '1250px',
   largeDesktop: '1250px',
 };
