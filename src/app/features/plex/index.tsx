@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // Models
 import { findDevices, selectDevice } from './redux/actions';
 import Login from './components/login';
-import PlexTabs from './components/plex-tabs';
+// import PlexTabs from './components/plex-tabs';
 import { selectDevices } from '../browser/redux/selectors';
 type Props = {};
 
@@ -39,7 +39,6 @@ const PlexLibrary = ({}: Props) => {
           </div>
         ))}
       </div>
-      <PlexTabs devices={devices} />
     </>
   );
 };

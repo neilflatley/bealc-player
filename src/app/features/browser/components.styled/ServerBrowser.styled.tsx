@@ -65,7 +65,7 @@ const StyledBrowser = styled.div`
   }
   @media ${({ theme }) => theme.mq.desktop} {
     grid-template-columns: ${p =>
-      p.columns === 3 ? '1fr 1fr 8fr' : '1fr 9fr'};
+      p.columns === 3 ? '1fr 1fr 50fr' : '1fr 50fr'};
 
     .selected-node {
       border-radius: 15px 0 0 15px;
