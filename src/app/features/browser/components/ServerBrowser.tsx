@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Route, Switch, useParams } from 'react-router';
 import { HashRouter, StaticRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,7 +32,6 @@ import {
 import {
   selectCurrentPlaylist,
   selectIsPlaying,
-  selectProgress,
   selectSeekTo,
   selectShowPlaylist,
   selectVolume,
@@ -72,20 +71,10 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
   const currentPlaylist = useSelector(selectCurrentPlaylist);
   const currentlyPlaying = currentPlaylist.find(i => i.isPlaying);
   const isPlaying = useSelector(selectIsPlaying);
-  const progress = useSelector(selectProgress);
-  const [playProgress, setPlayProgress] = useState(0);
 
   const seekTo = useSelector(selectSeekTo);
   const volume = useSelector(selectVolume);
   const autoPlay = useSelector(state => state.browser.autoPlay);
-
-  useEffect(() => {
-    setPlayProgress(seekTo);
-  }, [seekTo]);
-
-  useEffect(() => {
-    setPlayProgress(progress.playedSeconds);
-  }, [progress.playedSeconds]);
 
   if (typeof window === 'undefined') return null;
 
@@ -157,7 +146,7 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
         {browserVisible && (
           <ResizablePane
             height={'100%'}
-            storageId={1}
+            storageId={`${viewMode}_1`}
             sides={['left', 'right']}
             style={{
               minHeight: '150px',
@@ -192,7 +181,7 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
         {playlistVisible && (
           <ResizablePane
             height={'100%'}
-            storageId={2}
+            storageId={`${viewMode}_2`}
             sides={['right']}
             style={{
               minHeight: '120px',
@@ -236,10 +225,8 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
         handleTogglePlaylist={handleTogglePlaylist}
         handleVolume={handleVolume}
         isPlaying={isPlaying}
-        loaded={progress.loaded}
-        played={playProgress}
-        progress={progress}
         playlistVisible={playlistVisible}
+        seekTo={seekTo}
         volume={volume}
         nowPlaying={nowPlaying}
         viewMode={viewMode}

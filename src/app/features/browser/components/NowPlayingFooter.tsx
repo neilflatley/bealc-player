@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import MediaLinkModal from '~/components/MediaLinkModal';
 import Progress from '~/components/slider/Progress';
 import Volume from '~/components/slider/Volume';
+import { selectProgress } from '~/features/playlist/redux/selectors';
 import { symbols } from '~/theme/symbols';
 
 const StyledFooter = styled.div`
@@ -85,10 +87,8 @@ const formatSeconds = (seconds = 0) => {
 const NowPlayingFooter = ({
   nowPlaying,
   isPlaying,
-  loaded,
-  played,
-  progress,
   volume,
+  seekTo,
   handleSeek,
   handleSkip,
   handleSkipPrevious,
@@ -99,6 +99,17 @@ const NowPlayingFooter = ({
   playlistVisible,
   viewMode,
 }) => {
+  const progress = useSelector(selectProgress);
+  const [playProgress, setPlayProgress] = useState(0);
+
+  useEffect(() => {
+    setPlayProgress(seekTo);
+  }, [seekTo]);
+
+  useEffect(() => {
+    setPlayProgress(progress.playedSeconds);
+  }, [progress.playedSeconds]);
+
   if (!nowPlaying) return null;
   return (
     <StyledFooter viewMode={viewMode}>
@@ -154,16 +165,16 @@ const NowPlayingFooter = ({
           {symbols.next}
         </button>
       </div>
-      {played ? (
+      {playProgress ? (
         <div className="time-container">
-          <span className="played">{formatSeconds(played)}</span>
+          <span className="played">{formatSeconds(playProgress)}</span>
         </div>
       ) : null}
       {viewMode < 2 && (
         <div className="progress-container">
           <Progress
             duration={progress?.duration}
-            played={played}
+            played={playProgress}
             loaded={progress?.loadedSeconds}
             onChange={nextValue => handleSeek(nextValue)}
             styling={{
