@@ -6,6 +6,7 @@ import StyledPlaylist from '../components.styled/Playlist.styled';
 
 type Props = {
   className: string;
+  fullWidth: boolean;
   playlist: any[];
   visible: boolean;
   handleRemove: (pos: number) => void;
@@ -16,6 +17,7 @@ type Props = {
 
 const Playlist = ({
   className,
+  fullWidth,
   playlist,
   visible,
   handleClear,
@@ -25,7 +27,7 @@ const Playlist = ({
 }: Props) => {
   if (!visible) return null;
   return (
-    <StyledPlaylist className={className}>
+    <StyledPlaylist className={className} fullWidth={fullWidth}>
       <div>
         <div className="buttons-container">
           <button

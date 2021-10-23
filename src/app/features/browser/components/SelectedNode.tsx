@@ -6,8 +6,9 @@ import ContentList from './ContentList';
 
 type Props = {
   className: string;
-  node: any;
   content: any[];
+  fullWidth: boolean;
+  node: any;
   handleAddToPlaylist: (items: any[]) => void;
   handleBack: (id: string) => void;
   handleHide: () => void;
@@ -16,6 +17,7 @@ type Props = {
 
 const SelectedNode = ({
   className,
+  fullWidth,
   node,
   content,
   handleAddToPlaylist,
@@ -39,6 +41,7 @@ const SelectedNode = ({
   return (
     <StyledNode
       className={className}
+      fullWidth={fullWidth}
       imageUri={imageUri}
       showImagePanel={showImagePanel}
     >

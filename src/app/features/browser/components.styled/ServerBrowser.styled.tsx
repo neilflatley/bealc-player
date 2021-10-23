@@ -24,7 +24,8 @@ const StyledBrowser = styled.div`
     }
 
     .playlist {
-      border-radius: 0;
+      border-radius: ${p =>
+        p.columns === 3 ? '0' : p.columns === 2 ? '15px 15px 0 0' : '15px'};
     }
 
     .selected-item {
@@ -34,9 +35,9 @@ const StyledBrowser = styled.div`
   }
 
   @media ${({ theme }) => theme.mq.tablet} {
-    grid-template-columns: ${p => (p.columns === 3 ? 'repeat(2, 1fr)' : '1fr')};
+    grid-template-columns: ${p => (p.columns === 3 ? '1fr 1fr' : '1fr')};
     grid-template-rows: ${p =>
-      p.columns === 3 ? 'repeat(2, 1fr) auto' : '1fr auto'};
+      p.columns === 3 ? 'auto' : p.columns === 2 ? '1fr auto' : '1fr'};
 
     .selected-node {
       ${p =>
@@ -44,7 +45,7 @@ const StyledBrowser = styled.div`
           ? 'border-radius: 15px 0 0 0;'
           : p.columns === 3
           ? 'border-radius: 15px 0 0 15px;'
-          : p.columns === 2 && p.nowPlaying
+          : p.fullWidth
           ? 'border-radius: 15px 15px 0 0;'
           : p.columns === 2
           ? 'border-radius: 15px;'
@@ -53,7 +54,9 @@ const StyledBrowser = styled.div`
 
     .playlist {
       ${p =>
-        p.nowPlaying
+        p.nowPlaying && p.columns === 2
+          ? 'border-radius: 15px 15px 0 0;'
+          : p.nowPlaying
           ? 'border-radius: 0 15px 0 0;'
           : 'border-radius: 0 15px 15px 0;'}
     }
@@ -65,14 +68,16 @@ const StyledBrowser = styled.div`
   }
   @media ${({ theme }) => theme.mq.desktop} {
     grid-template-columns: ${p =>
-      p.columns === 3 ? '1fr 1fr 50fr' : '1fr 50fr'};
+      p.columns === 3 ? '1fr 1fr 50fr' : p.columns === 2 ? '1fr 50fr' : '50fr'};
 
     .selected-node {
-      border-radius: 15px 0 0 15px;
+      border-radius: ${p =>
+        p.fullWidth ? '15px 15px 0 15px' : '15px 0 0 15px'};
     }
 
     .playlist {
-      border-radius: 0;
+      border-radius: ${p =>
+        p.columns === 3 ? '0' : p.columns === 2 ? '15px 0 0 15px' : '15px'};
     }
 
     .selected-item {

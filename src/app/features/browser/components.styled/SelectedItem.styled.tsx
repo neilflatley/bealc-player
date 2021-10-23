@@ -57,7 +57,9 @@ const StyledItem = styled(StyledDiv)`
     min-height: 10vh;
   }
   @media ${({ theme }) => theme.mq.tablet} {
-    height: 60vh;
+    ${p =>
+      p.playerType === 'video' ? 'height: 60vh;' : ''} /* only if video */
+    min-height: 1vh;
   }
   @media ${({ theme }) => `${theme.mq.mobile}, ${theme.mq.tablet}`} {
     .media_player_container {

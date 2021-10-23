@@ -12,7 +12,7 @@ const StyledNode = styled.div`
 
   .info-panel {
     background: rgba(255, 255, 255, 0.3);
-    border-radius: 15px 0 0 0;
+    border-radius: 15px ${p => (p.fullWidth ? '15px' : '0')} 0 0;
     display: grid;
     grid-template-columns: ${p => (p.showImagePanel ? 'auto 1fr' : '1fr')};
     grid-template-rows: 1fr;
@@ -32,7 +32,7 @@ const StyledNode = styled.div`
 
   img {
     border-radius: 15px;
-    max-width: 100%;
+    max-width: 100px;
     max-height: 200px;
   }
 
