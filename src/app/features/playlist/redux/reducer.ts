@@ -77,7 +77,13 @@ export default produce((state: Draft<any>, action) => {
       return;
     }
     case REMOVE_FROM_PLAYLIST: {
+      const { isPlaying } = state.current[action.pos];
       state.current.splice(action.pos, 1);
+
+      if (isPlaying && action.pos < state.current.length) {
+        state.current[action.pos].isPlaying = true;
+      }
+
       return;
     }
     case ADVANCE_PLAYLIST: {
