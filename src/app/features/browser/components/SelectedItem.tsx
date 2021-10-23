@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
-import ResizingPane from 'react-resizing-pane';
+
+import { PlayerProgress } from './ServerBrowser';
+import Resizable from './Resizable';
+
 import { togglePlayState } from '~/features/playlist/redux/actions';
 import { symbols } from '~/theme/symbols';
 import StyledItem from '../components.styled/SelectedItem.styled';
-import { PlayerProgress } from './ServerBrowser';
 
 export type SelectedItemProps = {
   className: string;
@@ -88,7 +90,7 @@ const SelectedItem = ({
   }, [parentRef, mediaUri]);
 
   useEffect(() => {
-    if (['mp3'].includes(format)) setPlayerType('audio');
+    if (['flac', 'mp3', 'ogg'].includes(format)) setPlayerType('audio');
     else setPlayerType('video');
   }, [format]);
 
@@ -127,6 +129,8 @@ const SelectedItem = ({
   }, [audioPlayer, seekTo]);
 
   if (!title) return null;
+
+  const ResizablePane = Resizable(false);
 
   const MediaFormatButtons = () => {
     return (
@@ -179,7 +183,7 @@ const SelectedItem = ({
               playerType !== 'audio' || audioPlayerControls ? 'block' : 'none',
           }}
         >
-          <div className="video-player-container" ref={parentRef}>
+          <div className="media-player-container" ref={parentRef}>
             {playerDimensions.width && playerType === 'audio' ? (
               <div
                 className="resizable"
@@ -224,11 +228,14 @@ const SelectedItem = ({
               </div>
             ) : null}
             {playerDimensions.width && playerType === 'video' ? (
-              <ResizingPane
+              <ResizablePane
                 className="resizable"
                 sides={['top', 'bottom', 'left', 'right']}
                 height={playerDimensions.height}
                 width={playerDimensions.width && playerDimensions.width}
+                style={{
+                  height: '100%',
+                }}
               >
                 <ReactPlayer
                   ref={player => setPlayerRef(player)}
@@ -249,7 +256,7 @@ const SelectedItem = ({
                   }}
                   volume={player.volume}
                 />
-              </ResizingPane>
+              </ResizablePane>
             ) : null}
           </div>
         </div>
@@ -258,7 +265,11 @@ const SelectedItem = ({
         {thumbUri && (
           <div className="thumb_column">
             <img key={thumbUri} src={thumbUri} alt={title} />
-            {[2].includes(viewMode) ? <MediaFormatButtons /> : null}
+            {[2].includes(viewMode) ? (
+              <div>
+                <MediaFormatButtons />
+              </div>
+            ) : null}
           </div>
         )}
         <div className="info_column">

@@ -3,7 +3,6 @@ import { Route, Switch, useParams } from 'react-router';
 import { HashRouter, StaticRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
-import ResizingPane from 'react-resizing-pane';
 
 import SelectedItem from '~/features/browser/components/SelectedItem';
 import SelectedNode from '~/features/browser/components/SelectedNode';
@@ -43,6 +42,7 @@ import NowPlayingFooter from './NowPlayingFooter';
 import StyledBrowser from '../components.styled/ServerBrowser.styled';
 import { selectShowBrowser } from '~/features/device-discovery/redux/selectors';
 import DevicesTabs from '~/features/browser/devices-tabs';
+import Resizable from './Resizable';
 
 const Router = typeof window !== 'undefined' ? HashRouter : StaticRouter;
 
@@ -54,18 +54,12 @@ export type PlayerProgress = {
   duration?: number;
 };
 
-const NotResizable = ({ children, style }) => {
-  return <div style={style}>{children}</div>;
-};
-
 const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
   const { server } = useParams();
 
   const isBigScreen = useMediaQuery({ query: '(min-width: 1250px)' });
   const isTablet = useMediaQuery({ query: '(min-width: 650px)' });
   const viewMode = isBigScreen ? 0 : isTablet ? 1 : 2;
-
-  const Resizable = isBigScreen ? ResizingPane : NotResizable;
 
   const dispatch = useDispatch();
 
@@ -155,16 +149,18 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
   if (!selectedDevice && typeof window !== 'undefined') {
     window.location.hash = '/';
   }
+  const ResizablePane = Resizable(viewMode === 0);
 
   return (
     <>
       <StyledBrowser columns={columns} nowPlaying={nowPlaying}>
         {browserVisible && (
-          <Resizable
+          <ResizablePane
+            height={'100%'}
             storageId={1}
             sides={['left', 'right']}
             style={{
-              minHeight: '100%',
+              minHeight: '150px',
               minWidth: '120px',
               border: 'none',
             }}
@@ -191,14 +187,15 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
                 </Route>
               </Switch>
             </Router>
-          </Resizable>
+          </ResizablePane>
         )}
         {playlistVisible && (
-          <Resizable
+          <ResizablePane
+            height={'100%'}
             storageId={2}
             sides={['right']}
             style={{
-              minHeight: '100%',
+              minHeight: '120px',
               minWidth: '120px',
               border: 'none',
             }}
@@ -216,7 +213,7 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
               handleRemove={handleRemove}
               handleSelect={handlePlayNext}
             />
-          </Resizable>
+          </ResizablePane>
         )}
         <SelectedItem
           className="selected-item"

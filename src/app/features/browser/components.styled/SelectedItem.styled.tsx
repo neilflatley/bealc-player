@@ -14,7 +14,7 @@ const StyledItem = styled(StyledDiv)`
 
   .media_player_container {
     flex-grow: 1;
-    padding: 10px;
+    padding: 10px 10px 0 10px;
   }
   .media_player_container .resizable {
     background: #111;
@@ -32,8 +32,8 @@ const StyledItem = styled(StyledDiv)`
     display: grid;
     grid-template-columns: ${p => (p.thumbUri ? '110px 7fr' : '1fr')};
     opacity: 0.9;
-    margin: 0 10px 10px 10px;
-    padding: 10px 10px 0 10px;
+    margin: 10px;
+    padding: 10px 10px 5px 10px;
   }
   .item_info .thumb_column img {
     border-radius: 15px;
@@ -44,20 +44,32 @@ const StyledItem = styled(StyledDiv)`
     grid-column: span 2;
     text-align: right;
   }
-  .video-player-container {
+  .media-player-container {
     height: 100%;
     width: 100%;
   }
+  @media ${({ theme }) => `${theme.mq.mobile}, ${theme.mq.tablet}`} {
+    max-height: 50vh;
+    .media_player_container {
+      height: 75%;
+    }
+    .media-player-container {
+      max-width: 100%;
+    }
+  }
 
-  @media (max-width: 650px) {
+  @media ${({ theme }) => `${theme.mq.mobile}, ${theme.mq.landscapeNarrow}`} {
     .item_info {
-      grid-template-columns: ${p => (p.thumbUri ? '60px 7fr' : '1fr')};
+      grid-template-columns: ${p => (p.thumbUri ? '55px 7fr' : '1fr')};
+    }
+    .item_info .thumb_column {
+      font-size: 80%;
     }
     .item_info .thumb_column img {
-      width: 50px;
+      border-radius: 5px;
+      width: 45px;
     }
-    .item_info .duration,
-    .summary {
+    .item_info .summary {
       display: none;
     }
   }

@@ -79,20 +79,22 @@ const GlobalStyle = createGlobalStyle`
     font-weight: normal;
   }
 
-  .link-button {
-    background: none;
-     border: none; 
-     padding: 0;
-    
-    /* optional*/
-    font-family: arial,sans-serif;
-    /* input has OS specific font-family*/
-     color: #069;
-     cursor: pointer;
+  @media ${({ theme }) => `${theme.mq.mobile}, ${theme.mq.landscapeNarrow}`} {
+    body{
+      font-size: 1.1rem;
+      font-weight: normal;
+      line-height: 1.4rem;
+    }
+    h1 {
+      font-size: 1.4rem;
+      line-height: 1.4rem;
+    }
+    h2, h3 {
+      font-size: 100%;
+      line-height: 1rem;
+    }
   }
-  .link-button:hover{
-    text-decoration: underline;
-  }
+
 `;
 
 export default GlobalStyle;

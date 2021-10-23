@@ -19,39 +19,37 @@ const ContentList = ({ content, handleSelect, handleAddToPlaylist }: Props) => {
       {Array.isArray(content) &&
         content.map(c => (
           <div key={uniqueID()} className="library-item">
-            <p>
-              {c.canPlay && (
-                <button
-                  className="link-button play-button"
-                  onClick={() => {
-                    handleAddToPlaylist([c], false);
-                  }}
-                  title={`Add to playlist`}
-                >
-                  {symbols.playlist}
-                </button>
-              )}
-              {c.canPlay && (
-                <button
-                  className="link-button play-button"
-                  onClick={() => {
-                    handleAddToPlaylist([c], true);
-                    // handleSelect(mapContentId(c), true);
-                  }}
-                  title={`Play ${c.title} [${c.duration}]`}
-                >
-                  {symbols.play}
-                </button>
-              )}{' '}
+            {c.canPlay && (
               <button
-                className="link-button"
+                className="link-button play-button"
                 onClick={() => {
-                  handleSelect(mapContentId(c), true);
+                  handleAddToPlaylist([c], false);
                 }}
+                title={`Add to playlist`}
               >
-                {c.track && `${c.track}. `} {c.title}
+                {symbols.playlist}
               </button>
-            </p>
+            )}
+            {c.canPlay && (
+              <button
+                className="link-button play-button"
+                onClick={() => {
+                  handleAddToPlaylist([c], true);
+                  // handleSelect(mapContentId(c), true);
+                }}
+                title={`Play ${c.title} [${c.duration}]`}
+              >
+                {symbols.play}
+              </button>
+            )}{' '}
+            <button
+              className="link-button"
+              onClick={() => {
+                handleSelect(mapContentId(c), true);
+              }}
+            >
+              {c.track && `${c.track}. `} {c.title}
+            </button>
           </div>
         ))}
     </div>

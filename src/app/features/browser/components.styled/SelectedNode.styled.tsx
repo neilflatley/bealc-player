@@ -14,9 +14,9 @@ const StyledNode = styled.div`
     background: rgba(255, 255, 255, 0.3);
     border-radius: 15px 0 0 0;
     display: grid;
-    grid-template-columns: ${p => (p.imageUri ? 'auto 1fr' : '1fr')};
+    grid-template-columns: ${p => (p.showImagePanel ? 'auto 1fr' : '1fr')};
     grid-template-rows: 1fr;
-    padding: 10px;
+    padding: 10px 10px 2px 10px;
   }
   .info-panel .buttons {
     float: right;
@@ -26,34 +26,28 @@ const StyledNode = styled.div`
     padding: 0 10px 0 0;
   }
 
+  .image-panel button:hover {
+    opacity: 0.5;
+  }
+
   img {
     border-radius: 15px;
     max-width: 100%;
     max-height: 200px;
   }
 
-  @media (max-width: 650px) {
+  @media ${({ theme }) => theme.mq.mobile} {
     .info-panel {
       border-radius: 15px 15px 0 0;
     }
     img {
-      max-height: 50px;
+      border-radius: 5px;
+      max-width: 45px;
+      max-height: 45px;
     }
     .description {
       display: none;
     }
-  }
-
-  .library-item {
-    width: max-content;
-  }
-
-  .playlist-button {
-    border: none;
-    background: rgba(0, 0, 0, 0.5);
-    color: #1db954;
-    width: 47% !important;
-    margin: 0 1%;
   }
 `;
 

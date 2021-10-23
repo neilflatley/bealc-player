@@ -1,21 +1,20 @@
 export const sizes = {
-  mobile: '320px',
-  tablet: '481px',
-  laptop: '769px',
-  desktop: '1025px',
-  largeDesktop: '1441px',
+  mobile: '400px',
+  tablet: '550px',
+  desktop: '1250px',
+  largeDesktop: '1250px',
 };
 
 export const mq = {
-  mobile: `only screen and (min-width: ${sizes.mobile})`,
-  tablet: `only screen and (min-width: ${sizes.tablet})`,
-  laptop: `only screen and (min-width: ${sizes.laptop})`,
+  mobile: `only screen and (min-width: 0px) and (max-width: ${sizes.tablet})`,
+  tablet: `only screen and (min-width: ${sizes.tablet}) and (max-width: ${sizes.desktop})`,
   desktop: `only screen and (min-width: ${sizes.desktop})`,
   largeDesktop: `only screen and (min-width: ${sizes.largeDesktop})`,
+  landscapeNarrow: `only screen and (max-height: ${sizes.tablet})`,
 };
 
 // To use media queries follow this pattern
-// @media ${theme.mq.mobile} {
+// @media ${({ theme }) => theme.mq.mobile} {
 //   Styles here
 // }
 

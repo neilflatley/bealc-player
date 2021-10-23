@@ -31,6 +31,21 @@ const StyledPlayer = styled.div`
     padding: 7px;
   }
 
+  .link-button {
+    background: none;
+    border: none;
+    padding: 5px 0;
+
+    /* optional*/
+    font-family: arial, sans-serif;
+    /* input has OS specific font-family*/
+    color: #069;
+    cursor: pointer;
+  }
+  .link-button:hover {
+    text-decoration: underline;
+  }
+
   .play-button {
     width: 25px;
     height: 25px;
@@ -55,6 +70,18 @@ const StyledPlayer = styled.div`
     margin: 0 auto;
     padding: 7px;
     width: 100%;
+  }
+
+  .library-item {
+    width: max-content;
+  }
+
+  .playlist-button {
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    color: #1db954;
+    width: 47% !important;
+    margin: 0 1%;
   }
 `;
 

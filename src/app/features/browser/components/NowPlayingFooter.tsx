@@ -99,7 +99,7 @@ const NowPlayingFooter = ({
   playlistVisible,
   viewMode,
 }) => {
-  // if (!nowPlaying) return null;
+  if (!nowPlaying) return null;
   return (
     <StyledFooter viewMode={viewMode}>
       <div className="buttons-container">
@@ -159,19 +159,21 @@ const NowPlayingFooter = ({
           <span className="played">{formatSeconds(played)}</span>
         </div>
       ) : null}
-      <div className="progress-container">
-        <Progress
-          duration={progress?.duration}
-          played={played}
-          loaded={progress?.loadedSeconds}
-          onChange={nextValue => handleSeek(nextValue)}
-          styling={{
-            width: '100%',
-            height: ['16px', '8px', '8px'][viewMode],
-            thumbSize: ['16px', '8px', '8px'][viewMode],
-          }}
-        />
-      </div>
+      {viewMode < 2 && (
+        <div className="progress-container">
+          <Progress
+            duration={progress?.duration}
+            played={played}
+            loaded={progress?.loadedSeconds}
+            onChange={nextValue => handleSeek(nextValue)}
+            styling={{
+              width: '100%',
+              height: ['16px', '8px', '8px'][viewMode],
+              thumbSize: ['16px', '8px', '8px'][viewMode],
+            }}
+          />
+        </div>
+      )}
       {progress?.duration && (
         <div className="time-container">
           <span className="played">{formatSeconds(progress?.duration)}</span>

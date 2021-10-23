@@ -13,8 +13,8 @@ const StyledBrowser = styled.div`
   min-width: 100%;
   padding: 10px 10px ${p => (p.nowPlaying ? '70px' : '10px')} 10px;
 
-  @media (max-width: 650px) {
-    grid-template-columns: repeat(1, 1fr);
+  @media ${({ theme }) => theme.mq.mobile} {
+    grid-template-columns: 1fr;
     grid-template-rows: ${p =>
       p.columns === 3 ? 'repeat(2, 1fr) auto' : '1fr auto'};
 
@@ -33,8 +33,10 @@ const StyledBrowser = styled.div`
     }
   }
 
-  @media (min-width: 650px) {
+  @media ${({ theme }) => theme.mq.tablet} {
     grid-template-columns: ${p => (p.columns === 3 ? 'repeat(2, 1fr)' : '1fr')};
+    grid-template-rows: ${p =>
+      p.columns === 3 ? 'repeat(2, 1fr) auto' : '1fr auto'};
 
     .selected-node {
       ${p =>
@@ -61,7 +63,7 @@ const StyledBrowser = styled.div`
       border-radius: 0 0 15px 15px;
     }
   }
-  @media (min-width: 1250px) {
+  @media ${({ theme }) => theme.mq.desktop} {
     grid-template-columns: ${p =>
       p.columns === 3 ? '1fr 1fr 8fr' : '1fr 9fr'};
 

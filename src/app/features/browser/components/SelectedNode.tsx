@@ -33,14 +33,32 @@ const SelectedNode = ({
   const playable =
     (Array.isArray(content) && content?.filter(c => c.canPlay)) || [];
 
+  const showImagePanel =
+    (imageUri && playable.length === 0) || playable.length > 0;
+
   return (
-    <StyledNode className={className} imageUri={imageUri}>
+    <StyledNode
+      className={className}
+      imageUri={imageUri}
+      showImagePanel={showImagePanel}
+    >
       <div className="info-panel">
-        {imageUri && (
+        {showImagePanel ? (
           <div className="image-panel">
-            <img alt={title} src={imageUri} />
+            {imageUri && playable.length === 0 && (
+              <img alt={title} src={imageUri} />
+            )}
+            {playable.length > 0 && (
+              <button
+                className={`link-button ${!imageUri && 'play-button'}`}
+                onClick={() => handleAddToPlaylist(playable)}
+                title="Play"
+              >
+                {imageUri ? <img alt={title} src={imageUri} /> : symbols.play}
+              </button>
+            )}
           </div>
-        )}
+        ) : null}
         <div>
           <div className="buttons">
             <button
@@ -82,26 +100,9 @@ const SelectedNode = ({
             </StyledScrollbar>
           )}
         </div>
-        <div style={{ gridColumn: 'span 2' }}>
-          {playable.length > 0 && (
-            <div>
-              <button
-                className="link-button play-button playlist-button"
-                onClick={() => handleAddToPlaylist(playable)}
-              >
-                {symbols.play} Play
-              </button>
-              <button
-                className="link-button play-button playlist-button"
-                onClick={() => handleAddToPlaylist(playable, false)}
-              >
-                Add to playlist
-              </button>
-            </div>
-          )}
-        </div>
+        <div style={{ gridColumn: 'span 2' }}></div>
         {typeof goBackTo !== 'undefined' && (
-          <div style={{ padding: '10px 10px 0 10px', gridColumn: 'span 2' }}>
+          <div style={{ gridColumn: 'span 2' }}>
             <button
               id="back"
               className="link-button"
@@ -109,6 +110,17 @@ const SelectedNode = ({
             >
               ⏶ go back
             </button>
+            {playable.length > 0 && (
+              <>
+                {' | '}
+                <button
+                  className="link-button"
+                  onClick={() => handleAddToPlaylist(playable, false)}
+                >
+                  Add to playlist
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
