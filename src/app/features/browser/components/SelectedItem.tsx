@@ -29,6 +29,7 @@ export type SelectedItemProps = {
   height: number;
   handlePlayNext: () => void;
   handleProgress: (progress: PlayerProgress) => void;
+  handleSetPlayerType: (type: string) => void;
   handleVolume: (volume: number) => void;
   player: {
     isPlaying: boolean;
@@ -57,6 +58,7 @@ const SelectedItem = ({
   height,
   handlePlayNext,
   handleProgress,
+  handleSetPlayerType,
   handleVolume,
   player,
   seekTo,
@@ -90,8 +92,12 @@ const SelectedItem = ({
   }, [parentRef, mediaUri]);
 
   useEffect(() => {
-    if (['flac', 'mp3', 'ogg'].includes(format)) setPlayerType('audio');
-    else setPlayerType('video');
+    let type = 'video';
+    if (['flac', 'mp3', 'ogg'].includes(format)) {
+      type = 'audio';
+    }
+    setPlayerType(type);
+    handleSetPlayerType(type);
   }, [format]);
 
   useEffect(() => {
@@ -156,7 +162,9 @@ const SelectedItem = ({
           className="link-button"
           onClick={e => {
             e.preventDefault();
-            setPlayerType(playerType === 'video' ? 'audio' : 'video');
+            const nextType = playerType === 'video' ? 'audio' : 'video';
+            setPlayerType(nextType);
+            handleSetPlayerType(nextType);
           }}
           title={`Use ${playerType === 'video' ? 'audio' : 'video'} player`}
         >
@@ -174,7 +182,12 @@ const SelectedItem = ({
   };
 
   return (
-    <StyledItem className={className} imageUri={imageUri} thumbUri={thumbUri}>
+    <StyledItem
+      className={className}
+      imageUri={imageUri}
+      thumbUri={thumbUri}
+      playerType={playerType}
+    >
       {mediaUri && (
         <div
           className="media_player_container"

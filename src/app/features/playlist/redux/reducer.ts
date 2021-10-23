@@ -8,6 +8,7 @@ import {
   PLAYER_PROGRESS,
   PLAYER_SEEK,
   REMOVE_FROM_PLAYLIST,
+  SET_PLAYER_TYPE,
   SET_VOLUME,
   SHOW_PLAYLIST,
   TOGGLE_PLAYING,
@@ -16,6 +17,7 @@ import {
 const initialState = {
   current: [],
   player: {
+    type: 'audio',
     volume: 0.8,
     isPlaying: false,
     progress: {
@@ -104,6 +106,10 @@ export default produce((state: Draft<any>, action) => {
       } else {
         state.player.isPlaying = false;
       }
+      return;
+    }
+    case SET_PLAYER_TYPE: {
+      state.player.type = action.playerType;
       return;
     }
     case SET_VOLUME: {

@@ -24,6 +24,7 @@ import {
   hidePlaylist,
   playerSeek,
   removeFromPlaylist,
+  setPlayerType,
   setProgress,
   setVolume,
   showPlaylist,
@@ -83,7 +84,8 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
 
   const nowPlaying = currentlyPlaying || selectedItem;
 
-  const columns = playlistVisible ? 3 : 2;
+  const visibleColumns = [browserVisible, playlistVisible, !!nowPlaying];
+  const columns = visibleColumns.filter(isVisible => isVisible).length;
 
   const handleHide = () => {
     dispatch(hideBrowser());
@@ -97,6 +99,10 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
   const handleAddToPlaylist = (content: any[], autoPlay = true) => {
     dispatch(addToPlaylist(content, autoPlay));
     dispatch(showPlaylist());
+  };
+
+  const handleSetPlayerType = (type: 'audio' | 'video') => {
+    dispatch(setPlayerType(type));
   };
 
   const handlePlayNext = (pos?: number) => {
@@ -142,7 +148,15 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
 
   return (
     <>
-      <StyledBrowser columns={columns} nowPlaying={nowPlaying}>
+      <StyledBrowser
+        columns={columns}
+        nowPlaying={nowPlaying}
+        fullWidth={
+          (!playlistVisible && columns < 3) ||
+          (!browserVisible && columns < 3) ||
+          !isBigScreen
+        }
+      >
         {browserVisible && (
           <ResizablePane
             height={'100%'}
@@ -162,8 +176,12 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
                 <Route path="/server/:server">
                   <SelectedNode
                     className="selected-node"
-                    node={node}
                     content={content}
+                    fullWidth={
+                      (!playlistVisible && columns < 3) ||
+                      (!isBigScreen && columns < 3)
+                    }
+                    node={node}
                     handleAddToPlaylist={handleAddToPlaylist}
                     handleHide={handleHide}
                     handleSelect={handleSelect}
@@ -191,6 +209,7 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
           >
             <Playlist
               className="playlist"
+              fullWidth={!browserVisible && columns < 3}
               playlist={currentPlaylist}
               visible={playlistVisible}
               handleClear={() => {
@@ -213,6 +232,7 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
           viewMode={viewMode}
           handlePlayNext={handlePlayNext}
           handleProgress={handleProgress}
+          handleSetPlayerType={handleSetPlayerType}
           handleVolume={handleVolume}
         />
       </StyledBrowser>

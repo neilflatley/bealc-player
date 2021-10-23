@@ -7,6 +7,7 @@ import {
   PLAYER_PROGRESS,
   PLAYER_SEEK,
   REMOVE_FROM_PLAYLIST,
+  SET_PLAYER_TYPE,
   SET_VOLUME,
   SHOW_PLAYLIST,
   TOGGLE_PLAYING,
@@ -40,6 +41,10 @@ export const togglePlayState = () => ({
   type: TOGGLE_PLAYING,
 });
 
+export const setPlayerType = (playerType: string) => ({
+  type: SET_PLAYER_TYPE,
+  playerType,
+});
 export const setVolume = (volume: number) => ({
   type: SET_VOLUME,
   volume,
