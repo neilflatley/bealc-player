@@ -94,15 +94,15 @@ const SelectedItem = ({
       setAudioPlayer(audioPlayerRef.audioEl.current);
   }, [audioPlayerRef]);
 
-  useEffect(() => {
-    return () => {
-      if (audioPlayer) {
-        audioPlayer.pause();
-        audioPlayer.src = '';
-        audioPlayer.load();
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (audioPlayer) {
+  //       audioPlayer.pause();
+  //       audioPlayer.src = '';
+  //       audioPlayer.load();
+  //     }
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (audioPlayer) {
