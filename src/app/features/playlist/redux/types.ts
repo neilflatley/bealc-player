@@ -3,7 +3,7 @@ export const SHOW_PLAYLIST = `${PREFIX}SHOW`;
 export const HIDE_PLAYLIST = `${PREFIX}HIDE`;
 export const ADD_TO_PLAYLIST = `${PREFIX}ADD`;
 export const ADVANCE_PLAYLIST = `${PREFIX}ADVANCE`;
-export const DELETE_FROM_PLAYLIST = `${PREFIX}DELETE_FROM`;
+export const REMOVE_FROM_PLAYLIST = `${PREFIX}REMOVE_FROM`;
 export const CLEAR_PLAYLIST = `${PREFIX}CLEAR`;
 export const SAVE_PLAYLIST = `${PREFIX}SAVE`;
 
@@ -11,3 +11,4 @@ PREFIX = 'PLAYER/';
 export const TOGGLE_PLAYING = `${PREFIX}TOGGLE_PLAYING`;
 export const SET_VOLUME = `${PREFIX}SET_VOLUME`;
 export const PLAYER_PROGRESS = `${PREFIX}PROGRESS`;
+export const PLAYER_SEEK = `${PREFIX}SEEK`;

@@ -1,4 +1,10 @@
-import { BROWSE_SERVER, SELECT_CONTENT_NODE, SET_DEVICE_TYPE } from './types';
+import {
+  BROWSE_SERVER,
+  HIDE_BROWSER,
+  SELECT_CONTENT_NODE,
+  SET_DEVICE_TYPE,
+  SHOW_BROWSER,
+} from './types';
 
 export const setDeviceType = (deviceType: string) => ({
   type: SET_DEVICE_TYPE,
@@ -29,4 +35,11 @@ export const selectContentNode = (
   path,
   selectedDevice,
   autoPlay,
+});
+
+export const hideBrowser = () => ({
+  type: HIDE_BROWSER,
+});
+export const showBrowser = () => ({
+  type: SHOW_BROWSER,
 });

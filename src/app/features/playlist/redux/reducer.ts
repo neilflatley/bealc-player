@@ -6,6 +6,8 @@ import {
   CLEAR_PLAYLIST,
   HIDE_PLAYLIST,
   PLAYER_PROGRESS,
+  PLAYER_SEEK,
+  REMOVE_FROM_PLAYLIST,
   SET_VOLUME,
   SHOW_PLAYLIST,
   TOGGLE_PLAYING,
@@ -22,6 +24,7 @@ const initialState = {
       loaded: 0.0,
       loadedSeconds: 0.0,
     },
+    seekTo: 0,
   },
   visible: false,
 };
@@ -73,6 +76,10 @@ export default produce((state: Draft<any>, action) => {
       });
       return;
     }
+    case REMOVE_FROM_PLAYLIST: {
+      state.current.splice(action.pos, 1);
+      return;
+    }
     case ADVANCE_PLAYLIST: {
       const currentlyPlaying =
         state.current.find(i => i.isPlaying === true) || state.current[0];
@@ -102,7 +109,11 @@ export default produce((state: Draft<any>, action) => {
       return;
     }
     case PLAYER_PROGRESS: {
-      state.player.progress = action.progress;
+      state.player.progress = { ...state.player.progress, ...action.progress };
+      return;
+    }
+    case PLAYER_SEEK: {
+      state.player.seekTo = action.nextNumber;
       return;
     }
     default:

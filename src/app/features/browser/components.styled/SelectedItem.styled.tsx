@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+const StyledDiv = styled.div``;
 
-const StyledItem = styled.div`
+const StyledItem = styled(StyledDiv)`
   background: linear-gradient(
       rgba(255, 255, 255, 0.3),
       rgba(255, 255, 255, 0.3)
@@ -14,7 +15,7 @@ const StyledItem = styled.div`
     background: rgba(255, 255, 255, 0.8);
     border-radius: 15px;
     display: grid;
-    grid-template-columns: 110px 7fr;
+    grid-template-columns: ${p => (p.thumbUri ? '110px 7fr' : '1fr')};
     opacity: 0.9;
     margin: 10px;
     padding: 10px 10px 4px 10px;
@@ -23,14 +24,16 @@ const StyledItem = styled.div`
     border-radius: 15px;
     width: 100px;
   }
-  .item_info .info_column_main {
+  .info_column_main {
     font-size: 90%;
-    float: right;
+    grid-column: span 2;
+    padding: 5px;
+    text-align: right;
   }
 
   @media (max-width: 650px) {
     .item_info {
-      grid-template-columns: 60px 7fr;
+      grid-template-columns: ${p => (p.thumbUri ? '60px 7fr' : '1fr')};
     }
     .item_info .thumb_column img {
       width: 50px;

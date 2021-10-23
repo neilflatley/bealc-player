@@ -9,13 +9,14 @@ const StyledPlayer = styled.div`
     margin: 10px 10px 0 0;
   }
   .servers_tabs {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.3);
     color: #bebebe;
+    margin: 0 auto;
+    padding: 20px;
   }
   .login_container {
     background: rgba(255, 255, 255, 0.8);
     border-radius: 25px;
-    float: right;
     margin: 4px;
     padding: 0 10px;
   }
@@ -42,6 +43,17 @@ const StyledPlayer = styled.div`
     border: 1px solid #eee;
     opacity: 0.8;
     text-decoration: none;
+  }
+
+  .menu-button {
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 999px;
+    color: #1db954;
+    height: 4rem;
+    margin: 0 auto;
+    padding: 7px;
+    width: 100%;
   }
 `;
 

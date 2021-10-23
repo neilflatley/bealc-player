@@ -16,6 +16,7 @@ const PlexTabs = ({ devices }) => {
         onClick={() => {
           setTabIndex(index);
           dispatch(selectDevice(index));
+          window.location.hash = `/server/${encodeURIComponent(device.name)}`;
         }}
       >
         {device.isSelected && (

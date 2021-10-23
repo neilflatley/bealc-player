@@ -1,22 +1,36 @@
 import styled from 'styled-components';
-import StyledScrollbar from '~/components/StyledScrollbar';
 
-const StyledNode = styled(StyledScrollbar)`
+const StyledNode = styled.div`
   background: linear-gradient(
     rgba(255, 255, 255, 0.3),
     rgba(255, 255, 255, 0.3)
   );
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
   height: 100%;
-  overflow: auto;
-  padding: 10px 20px;
+
+  .info-panel {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 15px 0 0 0;
+    display: grid;
+    grid-template-columns: ${p => (p.imageUri ? 'auto 1fr' : '1fr')};
+    grid-template-rows: 1fr;
+    padding: 10px;
+  }
 
   img {
+    border-radius: 15px;
+    margin: 0 10px;
     max-width: 100%;
     max-height: 200px;
   }
   @media (max-width: 650px) {
+    .info-panel {
+      border-radius: 15px 15px 0 0;
+    }
     img {
-      max-height: 100px;
+      max-height: 50px;
     }
     .description {
       display: none;
@@ -28,7 +42,7 @@ const StyledNode = styled(StyledScrollbar)`
   }
 
   .playlist-button {
-    border: 1px solid #eee;
+    border: none;
     background: rgba(0, 0, 0, 0.5);
     color: #1db954;
     width: 47% !important;

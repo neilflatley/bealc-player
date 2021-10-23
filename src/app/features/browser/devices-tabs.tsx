@@ -1,18 +1,15 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import ServerBrowser from '~/features/browser/components/ServerBrowser';
 import StyledPlayer from '~/components/StyledPlayer';
 import StyledTabs from '~/components/StyledTabs';
 
 import DeviceDiscovery from '~/features/device-discovery';
 import PlexLibrary from '~/features/plex';
 import { setDeviceType } from './redux/actions';
-import { selectCurrentDeviceType } from './redux/selectors';
 
 const DevicesTabs = () => {
   const dispatch = useDispatch();
-  const deviceType = useSelector(selectCurrentDeviceType);
 
   return (
     <StyledPlayer>
@@ -43,7 +40,6 @@ const DevicesTabs = () => {
           </TabPanel>
         </Tabs>
       </StyledTabs>
-      <ServerBrowser deviceType={deviceType} />
     </StyledPlayer>
   );
 };

@@ -1,6 +1,12 @@
 import { produce, Draft } from 'immer';
 import merge from 'deepmerge';
-import { BROWSED_CONTENT, SELECT_CONTENT_NODE, SET_DEVICE_TYPE } from './types';
+import {
+  HIDE_BROWSER,
+  BROWSED_CONTENT,
+  SELECT_CONTENT_NODE,
+  SET_DEVICE_TYPE,
+  SHOW_BROWSER,
+} from './types';
 import mapJson from 'jsonpath-mapper';
 import { dlnaItemMapping, plexItemMapping } from '~/features/plex/mappings';
 
@@ -9,6 +15,7 @@ const initialState = {
   autoPlay: false,
   selectedItem: null,
   selectedNode: null,
+  visible: true,
 };
 
 export const findContent = (content, id) => {
@@ -93,6 +100,14 @@ export default produce((state: Draft<any>, action) => {
           }
         }
       }
+      return;
+    }
+    case SHOW_BROWSER: {
+      state.visible = true;
+      return;
+    }
+    case HIDE_BROWSER: {
+      state.visible = false;
       return;
     }
     default:

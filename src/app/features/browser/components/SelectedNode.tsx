@@ -10,6 +10,7 @@ type Props = {
   content: any[];
   handleAddToPlaylist: (items: any[]) => void;
   handleBack: (id: string) => void;
+  handleHide: () => void;
   handleSelect: (id: string) => void;
 };
 
@@ -20,23 +21,75 @@ const SelectedNode = ({
   handleAddToPlaylist,
   handleSelect,
   handleBack,
+  handleHide,
 }: Props) => {
   if (!node) return null;
   const title = node.title || node.name;
   const description = node.summary || '';
   const imageUri = node.thumbUri || node.imageUri;
   const goBackTo = node.parentID || node.path;
+  const { album, artist, year } = node;
 
   const playable =
     (Array.isArray(content) && content?.filter(c => c.canPlay)) || [];
 
   return (
-    <StyledNode className={className}>
-      <div>
-        <h2>{title}</h2>
-        {node.error && <p style={{ color: 'red' }}>{node.error}</p>}
+    <StyledNode className={className} imageUri={imageUri}>
+      <div className="info-panel">
+        {imageUri && (
+          <div>
+            <img alt={title} src={imageUri} />
+          </div>
+        )}
+        <div>
+          <button
+            id="hide"
+            className="link-button"
+            onClick={() => handleHide()}
+            style={{ float: 'right' }}
+            title="Hide browser"
+          >
+            {symbols.close}
+          </button>{' '}
+          <h2>{title}</h2>
+          <h3>
+            {album} {year && `[${year}]`} {artist && <span> - {artist}</span>}
+          </h3>
+          {node.error && <p style={{ color: 'red' }}>{node.error}</p>}
+          {description && (
+            <StyledScrollbar
+              style={{
+                maxHeight: '145px',
+                paddingRight: '10px',
+                marginBottom: '10px',
+              }}
+            >
+              <p className="description" style={{ textAlign: 'justify' }}>
+                {description}
+              </p>
+            </StyledScrollbar>
+          )}
+        </div>
+        <div style={{ gridColumn: 'span 2' }}>
+          {playable.length > 0 && (
+            <div>
+              <button
+                className="link-button play-button playlist-button"
+                onClick={() => handleAddToPlaylist(playable)}
+              >
+                {symbols.play} Play
+              </button>
+              <button
+                className="link-button play-button playlist-button"
+                onClick={() => handleAddToPlaylist(playable, false)}
+              >
+                Add to playlist
+              </button>
+            </div>
+          )}
+        </div>
         {typeof goBackTo !== 'undefined' && (
-          <p>
+          <div style={{ padding: '10px 10px 0 10px', gridColumn: 'span 2' }}>
             <button
               id="back"
               className="link-button"
@@ -44,40 +97,20 @@ const SelectedNode = ({
             >
               ⏶ go back
             </button>
-          </p>
-        )}
-        {imageUri && <img alt={title} src={imageUri} />}
-        <StyledScrollbar
-          style={{
-            maxHeight: '86px',
-            paddingRight: '10px',
-            marginBottom: '10px',
-          }}
-        >
-          <p className="description" style={{ textAlign: 'justify' }}>{description}</p>
-        </StyledScrollbar>
-        {playable.length > 0 && (
-          <div>
-            <button
-              className="link-button play-button playlist-button"
-              onClick={() => handleAddToPlaylist(playable)}
-            >
-              {symbols.play} Play
-            </button>
-            <button
-              className="link-button play-button playlist-button"
-              onClick={() => handleAddToPlaylist(playable, false)}
-            >
-              Add to playlist
-            </button>
           </div>
         )}
+      </div>
+      <StyledScrollbar
+        style={{
+          margin: '10px',
+        }}
+      >
         <ContentList
           content={content}
           handleAddToPlaylist={handleAddToPlaylist}
           handleSelect={handleSelect}
         />
-      </div>
+      </StyledScrollbar>
     </StyledNode>
   );
 };

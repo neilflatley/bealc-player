@@ -1,7 +1,7 @@
 import humanizeDuration from 'humanize-duration';
 
 const viaProxy = (url: string) =>
-  `/devices/proxy?url=${encodeURIComponent(url)}`;
+  url && `/devices/proxy?url=${encodeURIComponent(url)}`;
 
 const baseUrl = (device: any, local = 'remote') => {
   if (local === 'local') return `http://${device.localAddresses}:32400`;
@@ -67,7 +67,11 @@ export const dlnaItemMapping = {
     $path: album,
     $formatting: (album: string) => !!album,
   },
-  imageUri: { $path: ['raw.upnp:icon[0]'], $formatting: viaProxy },
+  imageUri: {
+    $path: ['raw.upnp:icon[0]'],
+    $formatting: viaProxy,
+    $disable: (u: string) => !u,
+  },
   thumbUri: {
     $path: [
       'raw.upnp:albumArtURI[0]._',

@@ -1,6 +1,11 @@
 export const symbols = {
-  playlist: '𝄙',
+  browser: '𝄙',
+  clear: '🗌',
+  close: '✖',
+  playlist: '⬱',
+  remove: '⮿',
   play: '▶',
+  playing: '...',
   pause: '⏸',
   next: '⏭',
   previous: '⏮',

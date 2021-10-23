@@ -1,14 +1,15 @@
 import styled from 'styled-components';
-import StyledScrollbar from '~/components/StyledScrollbar';
 
-const StyledPlaylist = styled(StyledScrollbar)`
+const StyledPlaylist = styled.div`
   background: linear-gradient(
     rgba(255, 255, 255, 0.2),
     rgba(255, 255, 255, 0.3)
   );
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
   height: 100%;
-  overflow: auto;
-  padding: 10px 20px 60px 10px;
+  padding: 10px;
 
   .buttons-container {
     float: right;

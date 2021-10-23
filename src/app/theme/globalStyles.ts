@@ -22,13 +22,15 @@ const GlobalStyle = createGlobalStyle`
 
     /* this sets 1rem to 10px */
     font-size: 62.5%;
+    
+    overflow: hidden;
 
   }
 
   body{
     font-size: 1.4rem;
     font-weight: normal;
-    line-height: 1.8rem;
+    line-height: 1.6rem;
   }
 
   html, body, #root, #app-root {
@@ -44,8 +46,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   h2, .h2{
-    font-size: 2rem;
-    line-height: 2.4rem;
+    font-size: 1.6rem;
+    line-height: 2.0rem;
     font-weight: bold;
     margin-block-start: 0.4rem;
     margin-block-end: 0.4rem;

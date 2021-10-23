@@ -99,7 +99,7 @@ const middleware = (app: Express) => {
       });
       const servers = await client?.getServers();
       const response = { accessToken: plex.accessToken(), servers };
-      res.cookie(cookieName, response, { maxAge: 24 * 60 * 60 * 1000 });
+      res.cookie(cookieName, response, { maxAge: 240 * 60 * 60 * 1000 });
       res.send(response);
     } catch (ex) {
       console.error(ex);
