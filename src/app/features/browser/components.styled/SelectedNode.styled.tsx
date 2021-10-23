@@ -18,6 +18,9 @@ const StyledNode = styled.div`
     grid-template-rows: 1fr;
     padding: 10px;
   }
+  .info-panel .buttons {
+    float: right;
+  }
 
   .image-panel {
     padding: 0 10px 0 0;
