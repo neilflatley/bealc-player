@@ -19,12 +19,16 @@ const StyledNode = styled.div`
     padding: 10px;
   }
 
+  .image-panel {
+    padding: 0 10px 0 0;
+  }
+
   img {
     border-radius: 15px;
-    margin: 0 10px;
     max-width: 100%;
     max-height: 200px;
   }
+
   @media (max-width: 650px) {
     .info-panel {
       border-radius: 15px 15px 0 0;

@@ -23,6 +23,7 @@ const staticRoutes: StaticRoute[] = [
     path: '/',
     exact: true,
     component: HomePage,
+    ssr: false,
   },
   {
     path: '/search/:facet?',
