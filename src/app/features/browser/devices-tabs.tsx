@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import StyledPlayer from '~/components/StyledPlayer';
 import StyledTabs from '~/components/StyledTabs';
 
 import DeviceDiscovery from '~/features/device-discovery';
@@ -12,7 +11,7 @@ const DevicesTabs = () => {
   const dispatch = useDispatch();
 
   return (
-    <StyledPlayer>
+    <div style={{ height: '100%' }}>
       <h1 className="logo">BeaLC Player</h1>
 
       <StyledTabs>
@@ -40,7 +39,7 @@ const DevicesTabs = () => {
           </TabPanel>
         </Tabs>
       </StyledTabs>
-    </StyledPlayer>
+    </div>
   );
 };
 

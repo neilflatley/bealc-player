@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import StyledScrollbar from '~/components/StyledScrollbar';
 import { selectDevices } from '../browser/redux/selectors';
 
 // Models
@@ -12,7 +13,7 @@ const DeviceDiscovery = ({}: Props) => {
 
   return (
     <>
-      <div className="servers_tabs">
+      <StyledScrollbar className="servers_tabs">
         {devices?.map((device, index) => (
           <div key={index}>
             <p>
@@ -41,7 +42,7 @@ const DeviceDiscovery = ({}: Props) => {
             Search for Media Servers
           </button>
         </div>
-      </div>
+      </StyledScrollbar>
     </>
   );
 };

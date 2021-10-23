@@ -1,5 +1,7 @@
 export const symbols = {
+  audio: '🎧',
   browser: '𝄙',
+  controls: '🕹',
   clear: '🗌',
   close: '✖',
   computer: '🖳',
@@ -7,6 +9,7 @@ export const symbols = {
   playlist: '⬱',
   remove: '⮿',
   server: '🖥',
+  video: '📼',
   vlc: '👽',
   play: '▶',
   playing: '...',

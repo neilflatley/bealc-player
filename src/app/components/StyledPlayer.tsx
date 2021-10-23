@@ -11,6 +11,7 @@ const StyledPlayer = styled.div`
   .servers_tabs {
     background: rgba(0, 0, 0, 0.3);
     color: #bebebe;
+    height: calc(100% - 34px);
     margin: 0 auto;
     padding: 20px;
   }

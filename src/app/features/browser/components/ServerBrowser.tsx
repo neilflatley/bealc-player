@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Route, Switch, useParams } from 'react-router';
+import { HashRouter, StaticRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 import ResizingPane from 'react-resizing-pane';
@@ -40,6 +42,9 @@ import Playlist from '~/features/playlist/components/Playlist';
 import NowPlayingFooter from './NowPlayingFooter';
 import StyledBrowser from '../components.styled/ServerBrowser.styled';
 import { selectShowBrowser } from '~/features/device-discovery/redux/selectors';
+import DevicesTabs from '~/features/browser/devices-tabs';
+
+const Router = typeof window !== 'undefined' ? HashRouter : StaticRouter;
 
 export type PlayerProgress = {
   played: number;
@@ -53,13 +58,9 @@ const NotResizable = ({ children, style }) => {
   return <div style={style}>{children}</div>;
 };
 
-const ServerBrowser = ({
-  deviceType,
-  server,
-}: {
-  deviceType: 'dlna' | 'plex';
-  server: number;
-}) => {
+const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
+  const { server } = useParams();
+
   const isBigScreen = useMediaQuery({ query: '(min-width: 1250px)' });
   const isTablet = useMediaQuery({ query: '(min-width: 650px)' });
   const viewMode = isBigScreen ? 0 : isTablet ? 1 : 2;
@@ -168,17 +169,28 @@ const ServerBrowser = ({
               border: 'none',
             }}
           >
-            <SelectedNode
-              className="selected-node"
-              node={node}
-              content={content}
-              handleAddToPlaylist={handleAddToPlaylist}
-              handleHide={handleHide}
-              handleSelect={handleSelect}
-              handleBack={(id: string) => {
-                dispatch(selectContentNode(selectedDevice, deviceType, id));
-              }}
-            />
+            <Router>
+              <Switch>
+                <Route exact path="/">
+                  <DevicesTabs />
+                </Route>
+                <Route path="/server/:server">
+                  <SelectedNode
+                    className="selected-node"
+                    node={node}
+                    content={content}
+                    handleAddToPlaylist={handleAddToPlaylist}
+                    handleHide={handleHide}
+                    handleSelect={handleSelect}
+                    handleBack={(id: string) => {
+                      dispatch(
+                        selectContentNode(selectedDevice, deviceType, id)
+                      );
+                    }}
+                  />
+                </Route>
+              </Switch>
+            </Router>
           </Resizable>
         )}
         {playlistVisible && (
@@ -212,6 +224,7 @@ const ServerBrowser = ({
           {...nowPlaying}
           player={{ isPlaying, volume }}
           seekTo={seekTo}
+          viewMode={viewMode}
           handlePlayNext={handlePlayNext}
           handleProgress={handleProgress}
           handleVolume={handleVolume}

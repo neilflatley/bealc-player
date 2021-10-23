@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
 const StyledTabs = styled.div`
+  height: 100%;
+
   .react-tabs {
     -webkit-tap-highlight-color: transparent;
+    height: 100%;
   }
 
   .react-tabs__tab-list {
@@ -55,10 +58,12 @@ const StyledTabs = styled.div`
 
   .react-tabs__tab-panel {
     display: none;
+    height: 100%;
   }
 
   .react-tabs__tab-panel--selected {
     display: block;
+    height: 100%;
   }
 `;
 

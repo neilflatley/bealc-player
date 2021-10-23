@@ -3,6 +3,7 @@ import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import ResizingPane from 'react-resizing-pane';
 import { togglePlayState } from '~/features/playlist/redux/actions';
+import { symbols } from '~/theme/symbols';
 import StyledItem from '../components.styled/SelectedItem.styled';
 import { PlayerProgress } from './ServerBrowser';
 
@@ -32,6 +33,7 @@ export type SelectedItemProps = {
     volume: number;
   };
   seekTo: number;
+  viewMode: number;
 };
 
 const SelectedItem = ({
@@ -56,6 +58,7 @@ const SelectedItem = ({
   handleVolume,
   player,
   seekTo,
+  viewMode,
 }: SelectedItemProps) => {
   const [playerType, setPlayerType] = useState(
     ['mp3'].includes(format) ? 'audio' : 'video'
@@ -79,7 +82,7 @@ const SelectedItem = ({
       const parentWidth = parentRef.current.offsetWidth;
       setPlayerDimensions({
         width: parentWidth - 20,
-        height: parentHeight - 160,
+        height: parentHeight - 10,
       });
     }
   }, [parentRef, mediaUri]);
@@ -124,12 +127,138 @@ const SelectedItem = ({
   }, [audioPlayer, seekTo]);
 
   if (!title) return null;
+
+  const MediaFormatButtons = () => {
+    return (
+      <>
+        {playerType === 'audio' && (
+          <span>
+            <button
+              className="link-button"
+              onClick={e => {
+                e.preventDefault();
+                setAudioPlayerControls(!audioPlayerControls);
+              }}
+              title={`${
+                !audioPlayerControls ? 'Show' : 'Hide'
+              } player controls}`}
+            >
+              {symbols.controls}
+            </button>
+            {' | '}
+          </span>
+        )}
+        <button
+          className="link-button"
+          onClick={e => {
+            e.preventDefault();
+            setPlayerType(playerType === 'video' ? 'audio' : 'video');
+          }}
+          title={`Use ${playerType === 'video' ? 'audio' : 'video'} player`}
+        >
+          {playerType === 'video' ? symbols.video : symbols.audio}
+        </button>
+        {' | '}
+        {format && (
+          <span className="format" title={`${videoCodec} / ${audioCodec}`}>
+            {' '}
+            {format}
+          </span>
+        )}
+      </>
+    );
+  };
+
   return (
-    <StyledItem imageUri={imageUri} thumbUri={thumbUri} className={className}>
+    <StyledItem className={className} imageUri={imageUri} thumbUri={thumbUri}>
+      {mediaUri && (
+        <div
+          className="media_player_container"
+          style={{
+            display:
+              playerType !== 'audio' || audioPlayerControls ? 'block' : 'none',
+          }}
+        >
+          <div className="video-player-container" ref={parentRef}>
+            {playerDimensions.width && playerType === 'audio' ? (
+              <div
+                className="resizable"
+                style={{
+                  paddingTop: '16px',
+                }}
+              >
+                <ReactAudioPlayer
+                  src={mediaUri}
+                  autoPlay
+                  controls={audioPlayerControls}
+                  listenInterval={1000}
+                  onError={error => {
+                    console.log(error);
+                    togglePlayState(error);
+                  }}
+                  onEnded={() => {
+                    handlePlayNext();
+                  }}
+                  onListen={time => {
+                    setAudioProgress({
+                      played: time / (audioPlayer?.duration || 0),
+                      playedSeconds: time,
+                      loaded:
+                        (audioPlayer?.buffered.end(
+                          audioPlayer?.buffered.length - 1
+                        ) || 0) / (audioPlayer?.duration || 0),
+                      loadedSeconds:
+                        audioPlayer?.buffered.end(
+                          audioPlayer?.buffered.length - 1
+                        ) || 0,
+                      duration: audioPlayer?.duration || 0,
+                    });
+                  }}
+                  onVolumeChanged={e => {
+                    handleVolume(e.target?.volume || 0);
+                  }}
+                  ref={el => setAudioPlayerRef(el)}
+                  style={{ width: '100%' }}
+                  volume={player.volume}
+                />
+              </div>
+            ) : null}
+            {playerDimensions.width && playerType === 'video' ? (
+              <ResizingPane
+                className="resizable"
+                sides={['top', 'bottom', 'left', 'right']}
+                height={playerDimensions.height}
+                width={playerDimensions.width && playerDimensions.width}
+              >
+                <ReactPlayer
+                  ref={player => setPlayerRef(player)}
+                  controls={true}
+                  light={!autoPlay ? thumbUri || imageUri : undefined}
+                  playing={player.isPlaying}
+                  url={mediaUri}
+                  height="100%"
+                  width="100%"
+                  onDuration={duration => {
+                    handleProgress({ duration });
+                  }}
+                  onEnded={() => {
+                    handlePlayNext();
+                  }}
+                  onProgress={progress => {
+                    handleProgress(progress);
+                  }}
+                  volume={player.volume}
+                />
+              </ResizingPane>
+            ) : null}
+          </div>
+        </div>
+      )}
       <div className="item_info">
         {thumbUri && (
           <div className="thumb_column">
             <img key={thumbUri} src={thumbUri} alt={title} />
+            {[2].includes(viewMode) ? <MediaFormatButtons /> : null}
           </div>
         )}
         <div className="info_column">
@@ -137,125 +266,15 @@ const SelectedItem = ({
           <h3>
             {album} {year && `[${year}]`} {artist && <span> - {artist}</span>}
           </h3>
-          {duration && <span className="duration"> {duration}</span>}
-
+          {duration && <span className="duration"> {duration}</span>}{' '}
+          {[0, 1].includes(viewMode) ? <MediaFormatButtons /> : null}
           {summary && (
             <div className="summary">
               <p>{summary}</p>
             </div>
           )}
         </div>
-        <div className="info_column_main">
-          {playerType === 'audio' && (
-            <button
-              className="link-button"
-              onClick={e => {
-                e.preventDefault();
-                setAudioPlayerControls(!audioPlayerControls);
-              }}
-            >
-              {!audioPlayerControls ? 'Show' : 'Hide'} player controls
-            </button>
-          )}
-          {' | '}
-          <button
-            className="link-button"
-            onClick={e => {
-              e.preventDefault();
-              setPlayerType(playerType === 'video' ? 'audio' : 'video');
-            }}
-          >
-            Use {playerType === 'video' ? 'audio' : 'video'} player
-          </button>
-          {' | '}
-          {format && (
-            <span className="format" title={`${videoCodec} / ${audioCodec}`}>
-              {' '}
-              {format}
-            </span>
-          )}
-        </div>
       </div>
-      {mediaUri && (
-        <div
-          className="media_player_container"
-          ref={parentRef}
-          style={{
-            display: audioPlayerControls ? 'block' : 'none',
-          }}
-        >
-          {playerDimensions.width && playerType === 'audio' && (
-            <div
-              className="resizable"
-              style={{
-                paddingTop: '16px',
-              }}
-            >
-              <ReactAudioPlayer
-                src={mediaUri}
-                autoPlay
-                controls={audioPlayerControls}
-                listenInterval={1000}
-                onError={error => {
-                  console.log(error);
-                  togglePlayState(error);
-                }}
-                onEnded={() => {
-                  handlePlayNext();
-                }}
-                onListen={time => {
-                  setAudioProgress({
-                    played: time / (audioPlayer?.duration || 0),
-                    playedSeconds: time,
-                    loaded:
-                      (audioPlayer?.buffered.end(
-                        audioPlayer?.buffered.length - 1
-                      ) || 0) / (audioPlayer?.duration || 0),
-                    loadedSeconds:
-                      audioPlayer?.buffered.end(
-                        audioPlayer?.buffered.length - 1
-                      ) || 0,
-                    duration: audioPlayer?.duration || 0,
-                  });
-                }}
-                onVolumeChanged={e => {
-                  handleVolume(e.target?.volume || 0);
-                }}
-                ref={el => setAudioPlayerRef(el)}
-                style={{ width: '100%' }}
-                volume={player.volume}
-              />
-            </div>
-          )}
-          {playerDimensions.width && playerType === 'video' && (
-            <ResizingPane
-              className="resizable"
-              sides={['top', 'bottom', 'left', 'right']}
-              height={playerDimensions.height}
-              width={playerDimensions.width && playerDimensions.width}
-            >
-              <ReactPlayer
-                ref={player => setPlayerRef(player)}
-                controls
-                light={!autoPlay ? thumbUri || imageUri : undefined}
-                playing={player.isPlaying}
-                url={mediaUri}
-                width="100%"
-                onDuration={duration => {
-                  handleProgress({ duration });
-                }}
-                onEnded={() => {
-                  handlePlayNext();
-                }}
-                onProgress={progress => {
-                  handleProgress(progress);
-                }}
-                volume={player.volume}
-              />
-            </ResizingPane>
-          )}
-        </div>
-      )}
     </StyledItem>
   );
 };
