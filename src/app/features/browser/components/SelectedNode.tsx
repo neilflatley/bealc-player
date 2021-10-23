@@ -42,15 +42,27 @@ const SelectedNode = ({
           </div>
         )}
         <div>
-          <button
-            id="hide"
-            className="link-button"
-            onClick={() => handleHide()}
-            style={{ float: 'right' }}
-            title="Hide browser"
-          >
-            {symbols.close}
-          </button>{' '}
+          <div className="buttons">
+            <button
+              id="servers"
+              className="link-button"
+              onClick={() => {
+                window.location.hash = '/';
+              }}
+              title="Change server"
+            >
+              {symbols.server}
+            </button>
+            {' | '}
+            <button
+              id="hide"
+              className="link-button"
+              onClick={() => handleHide()}
+              title="Hide browser"
+            >
+              {symbols.close}
+            </button>
+          </div>
           <h2>{title}</h2>
           <h3>
             {album} {year && `[${year}]`} {artist && <span> - {artist}</span>}
