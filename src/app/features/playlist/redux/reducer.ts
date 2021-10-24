@@ -5,6 +5,7 @@ import {
   ADVANCE_PLAYLIST,
   CLEAR_PLAYLIST,
   HIDE_PLAYLIST,
+  LOAD_CACHED_PLAYLIST,
   PLAYER_PROGRESS,
   PLAYER_SEEK,
   REMOVE_FROM_PLAYLIST,
@@ -48,6 +49,16 @@ const combineMerge = (target, source, options) => {
 
 export default produce((state: Draft<any>, action) => {
   switch (action.type) {
+    case LOAD_CACHED_PLAYLIST: {
+      const { playlist } = action;
+      state.current = playlist?.current || state.current;
+      state.player.volume = playlist?.player?.volume || state.player.volume;
+      if (playlist.current) {
+        state.player.isPlaying = true;
+        state.visible = true;
+      }
+      return;
+    }
     case SHOW_PLAYLIST: {
       state.visible = true;
       return;

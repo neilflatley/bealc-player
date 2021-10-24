@@ -211,7 +211,7 @@ const SelectedItem = ({
                   listenInterval={1000}
                   onError={error => {
                     console.log(error);
-                    togglePlayState(error);
+                    handlePlayNext();
                   }}
                   onEnded={() => {
                     handlePlayNext();

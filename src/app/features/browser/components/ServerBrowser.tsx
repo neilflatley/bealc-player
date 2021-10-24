@@ -14,7 +14,6 @@ import {
 } from '~/features/browser/redux/actions';
 import {
   selectCurrentDevice,
-  selectCurrentItem,
   selectCurrentNode,
 } from '~/features/browser/redux/selectors';
 import {
@@ -33,6 +32,7 @@ import {
 import {
   selectCurrentPlaylist,
   selectIsPlaying,
+  selectNowPlaying,
   selectSeekTo,
   selectShowPlaylist,
   selectVolume,
@@ -67,10 +67,9 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
   const playlistVisible = useSelector(selectShowPlaylist);
 
   const selectedDevice = useSelector(selectCurrentDevice);
-  const selectedItem = useSelector(selectCurrentItem);
   const selectedNode = useSelector(selectCurrentNode);
   const currentPlaylist = useSelector(selectCurrentPlaylist);
-  const currentlyPlaying = currentPlaylist.find(i => i.isPlaying);
+  const nowPlaying = useSelector(selectNowPlaying);
   const isPlaying = useSelector(selectIsPlaying);
 
   const seekTo = useSelector(selectSeekTo);
@@ -81,8 +80,6 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
 
   const node = selectedNode || selectedDevice;
   const content = node?.children || node?.content;
-
-  const nowPlaying = currentlyPlaying || selectedItem;
 
   const visibleColumns = [browserVisible, playlistVisible, !!nowPlaying];
   const columns = visibleColumns.filter(isVisible => isVisible).length;
