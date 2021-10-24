@@ -4,6 +4,11 @@ import { findContent } from './reducer';
 
 export const selectCurrentDeviceType = (state: any) => state.browser.deviceType;
 
+export const selectIsLoading = (state: any) => {
+  const deviceType = selectCurrentDeviceType(state);
+  return state[deviceType]?.servers?.loading || false;
+};
+
 export const selectDevices = (state: any) => {
   const deviceType = selectCurrentDeviceType(state);
   return state[deviceType]?.devices;

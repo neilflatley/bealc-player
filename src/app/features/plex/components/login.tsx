@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getPlexServersCookie } from '../util';
 
-const Login = ({ submit, devices }) => {
+const Login = ({ submit, signOut, devices }) => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
   const [servers, setServers] = useState(getPlexServersCookie());
@@ -12,9 +12,18 @@ const Login = ({ submit, devices }) => {
 
   if (servers?.accessToken)
     return (
-      <div>
-        <p>Signed into plex.tv</p>
-      </div>
+      <p>
+        Signed into plex.tv{': '}
+        <button
+          id="btn"
+          className="link-button"
+          onClick={() => {
+            signOut();
+          }}
+        >
+          sign out
+        </button>
+      </p>
     );
   return (
     <div>

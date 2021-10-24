@@ -1,3 +1,4 @@
+import to from 'await-to-js';
 import { put, select, takeEvery } from 'redux-saga/effects';
 
 import {
@@ -5,17 +6,22 @@ import {
   BROWSE_SERVER,
   FIND_MEDIA_SERVERS,
   FOUND_MEDIA_SERVERS,
-  SELECT_MEDIA_SERVER,
+  PLEX_SIGN_OUT,
+  SELECT_PLEX_SERVER,
 } from './types';
-import { completeApiPath, getPlexServersCookie } from '../util';
+import {
+  completeApiPath,
+  destroyPlexServersCookie,
+  getPlexServersCookie,
+} from '../util';
 import { selectCurrentDevice } from './selectors';
-import to from 'await-to-js';
 
 export const plexSagas = [
   findDevices(),
   takeEvery(FIND_MEDIA_SERVERS, findDevices),
-  takeEvery(SELECT_MEDIA_SERVER, browsePlexMediaServer),
+  takeEvery(SELECT_PLEX_SERVER, browsePlexMediaServer),
   takeEvery(BROWSE_SERVER, browsePlexMediaServer),
+  takeEvery(PLEX_SIGN_OUT, signOut),
 ];
 
 function* findDevices(action) {
@@ -25,6 +31,7 @@ function* findDevices(action) {
     servers,
   });
 }
+
 export function* browsePlexMediaServer(action) {
   const path = action.path || '/';
 
@@ -40,6 +47,10 @@ export function* browsePlexMediaServer(action) {
     path,
     browsed,
   });
+}
+
+function signOut() {
+  destroyPlexServersCookie();
 }
 
 const api = {

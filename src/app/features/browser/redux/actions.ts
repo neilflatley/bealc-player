@@ -2,6 +2,7 @@ import {
   BROWSE_SERVER,
   HIDE_BROWSER,
   SELECT_CONTENT_NODE,
+  SELECT_MEDIA_SERVER,
   SET_DEVICE_TYPE,
   SHOW_BROWSER,
 } from './types';
@@ -10,7 +11,10 @@ export const setDeviceType = (deviceType: string) => ({
   type: SET_DEVICE_TYPE,
   deviceType,
 });
-
+export const setDevice = (pos: number) => ({
+  type: SELECT_MEDIA_SERVER,
+  pos,
+});
 export const browseServer = (
   selectedDevice: any,
   deviceType: string,

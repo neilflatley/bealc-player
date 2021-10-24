@@ -7,13 +7,13 @@ import {
   BROWSE_SERVER,
   FIND_MEDIA_SERVERS,
   FOUND_MEDIA_SERVERS,
-  SELECT_MEDIA_SERVER,
+  SELECT_DLNA_SERVER,
 } from './types';
 
 export const discoverySagas = [
   findDevices(),
   takeEvery(FIND_MEDIA_SERVERS, findDevices),
-  takeEvery(SELECT_MEDIA_SERVER, browseDlnaMediaServer),
+  takeEvery(SELECT_DLNA_SERVER, browseDlnaMediaServer),
   takeEvery(BROWSE_SERVER, browseDlnaMediaServer),
 ];
 function* findDevices() {

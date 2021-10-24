@@ -4,6 +4,7 @@ import {
   HIDE_BROWSER,
   BROWSED_CONTENT,
   SELECT_CONTENT_NODE,
+  SET_MEDIA_SERVER,
   SET_DEVICE_TYPE,
   SHOW_BROWSER,
 } from './types';
@@ -15,6 +16,7 @@ const initialState = {
   autoPlay: false,
   selectedItem: null,
   selectedNode: null,
+  selectedServer: null,
   visible: true,
 };
 
@@ -38,6 +40,10 @@ export default produce((state: Draft<any>, action) => {
   switch (action.type) {
     case SET_DEVICE_TYPE: {
       state.deviceType = action.deviceType;
+      return;
+    }
+    case SET_MEDIA_SERVER: {
+      state.selectedServer = action.selectedServer;
       return;
     }
     case SELECT_CONTENT_NODE: {

@@ -4,22 +4,21 @@ import {
   BROWSED_CONTENT,
   FIND_MEDIA_SERVERS,
   FOUND_MEDIA_SERVERS,
-  SELECT_MEDIA_SERVER,
+  SELECT_DLNA_SERVER,
 } from './types';
 import mapJson from 'jsonpath-mapper';
 import { dlnaItemMapping } from '~/features/plex/mappings';
 import { findContent } from '~/features/browser/redux/reducer';
+import { arrayMerge, combineMerge } from '~/utils';
 
 const initialState = {
   devices: [],
-  selectedServer: null,
   servers: {
     error: null,
+    lastFound: [],
     loading: false,
   },
 };
-
-const arrayMerge = (_, sourceArray) => sourceArray;
 
 export default produce((state: Draft<any>, action) => {
   switch (action.type) {
@@ -28,14 +27,14 @@ export default produce((state: Draft<any>, action) => {
       return;
 
     case FOUND_MEDIA_SERVERS: {
-      state.devices = merge(state.devices, action.servers.devices, {
-        arrayMerge,
+      state.devices = merge(action.servers.devices, state.devices, {
+        arrayMerge: combineMerge,
       });
+      state.servers.lastFound = action.servers.devices;
       state.servers.loading = false;
       return;
     }
-    case SELECT_MEDIA_SERVER: {
-      state.selectedServer = state.devices[action.pos].name;
+    case SELECT_DLNA_SERVER: {
       state.devices = state.devices.map((d, i) => ({
         ...d,
         isSelected: i === action.pos,

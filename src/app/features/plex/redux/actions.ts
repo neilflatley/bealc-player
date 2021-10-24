@@ -1,8 +1,9 @@
 import {
   BROWSE_SERVER,
   FIND_MEDIA_SERVERS,
+  PLEX_SIGN_OUT,
   SELECT_CONTENT_NODE,
-  SELECT_MEDIA_SERVER,
+  SELECT_PLEX_SERVER,
 } from './types';
 
 export const findDevices = (username, password) => ({
@@ -10,8 +11,8 @@ export const findDevices = (username, password) => ({
   username,
   password,
 });
-export const selectDevice = (pos: number) => ({
-  type: SELECT_MEDIA_SERVER,
+export const setDevice = (pos: number) => ({
+  type: SELECT_PLEX_SERVER,
   pos,
 });
 export const browseServer = (path: string, parentPath = '') => ({
@@ -22,4 +23,7 @@ export const browseServer = (path: string, parentPath = '') => ({
 export const selectContentNode = (path: string) => ({
   type: SELECT_CONTENT_NODE,
   path,
+});
+export const signOut = () => ({
+  type: PLEX_SIGN_OUT,
 });

@@ -4,15 +4,16 @@ import {
   BROWSED_CONTENT,
   FIND_MEDIA_SERVERS,
   FOUND_MEDIA_SERVERS,
-  SELECT_MEDIA_SERVER,
+  PLEX_SIGN_OUT,
+  SELECT_PLEX_SERVER,
 } from './types';
 import mapJson from 'jsonpath-mapper';
 import { plexItemMapping } from '../mappings';
 import { findContent } from '~/features/browser/redux/reducer';
+import { arrayMerge } from '~/utils';
 
 const initialState = {
   devices: [],
-  selectedServer: null,
   servers: {
     accessToken: null,
     error: null,
@@ -20,10 +21,12 @@ const initialState = {
   },
 };
 
-const arrayMerge = (_, sourceArray) => sourceArray;
-
 export default produce((state: Draft<any>, action) => {
   switch (action.type) {
+    case PLEX_SIGN_OUT: {
+      state.devices = [];
+      return;
+    }
     case FIND_MEDIA_SERVERS:
       state.servers.loading = true;
       return;
@@ -37,8 +40,7 @@ export default produce((state: Draft<any>, action) => {
       state.servers.loading = false;
       return;
     }
-    case SELECT_MEDIA_SERVER: {
-      state.selectedServer = state.devices[action.pos].name;
+    case SELECT_PLEX_SERVER: {
       state.devices = state.devices.map((d, i) => ({
         ...d,
         isSelected: i === action.pos,

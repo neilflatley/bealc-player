@@ -15,20 +15,13 @@ const StyledPlayer = styled.div`
     margin: 0 auto;
     padding: 20px;
   }
-  .login_container {
-    background: rgba(255, 255, 255, 0.8);
+  .servers-container {
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 25px;
-    margin: 4px;
-    padding: 0 10px;
+    padding: 1px 10px;
   }
-  .login_container p {
-    margin-block: 0.4em;
-  }
-  .login_container button {
-    background: none;
-    border: 0;
-    cursor: pointer;
-    padding: 7px;
+  .servers-container p {
+    text-align: center;
   }
 
   .link-button {

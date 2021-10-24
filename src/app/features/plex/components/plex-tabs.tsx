@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import StyledTabs from '~/components/StyledTabs';
 import uniqueID from '~/core/util/unique';
 
-import { selectDevice } from '../redux/actions';
+import { setDevice } from '../redux/actions';
 
 const PlexTabs = ({ devices }) => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const PlexTabs = ({ devices }) => {
         key={uniqueID()}
         onClick={() => {
           setTabIndex(index);
-          dispatch(selectDevice(index));
+          dispatch(setDevice(index));
           window.location.hash = `/server/${encodeURIComponent(device.name)}`;
         }}
       >
