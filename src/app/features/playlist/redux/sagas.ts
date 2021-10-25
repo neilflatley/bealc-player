@@ -6,6 +6,7 @@ import {
 } from './selectors';
 import {
   ADD_TO_PLAYLIST,
+  ADVANCE_PLAYLIST,
   CLEAR_PLAYLIST,
   LOAD_CACHED_PLAYLIST,
   REMOVE_FROM_PLAYLIST,
@@ -15,6 +16,7 @@ import {
 export const playlistSagas = [
   readLocalStorage(),
   takeEvery(ADD_TO_PLAYLIST, updateLocalStorage),
+  takeEvery(ADVANCE_PLAYLIST, updateLocalStorage),
   takeEvery(REMOVE_FROM_PLAYLIST, updateLocalStorage),
   takeEvery(CLEAR_PLAYLIST, updateLocalStorage),
   takeEvery(SET_VOLUME, updateLocalStorage),

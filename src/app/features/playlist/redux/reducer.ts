@@ -54,7 +54,7 @@ export default produce((state: Draft<any>, action) => {
       state.current = playlist?.current || state.current;
       state.player.volume = playlist?.player?.volume || state.player.volume;
       if (playlist.current) {
-        state.player.isPlaying = true;
+        state.player.isPlaying = false;
         state.visible = true;
       }
       return;
@@ -74,6 +74,7 @@ export default produce((state: Draft<any>, action) => {
       else {
         state.current = [];
         state.player.isPlaying = false;
+        state.player.seekTo = 0;
       }
       return;
     }
@@ -95,6 +96,7 @@ export default produce((state: Draft<any>, action) => {
 
       if (isPlaying && action.pos < state.current.length) {
         state.current[action.pos].isPlaying = true;
+        state.player.seekTo = 0;
       }
 
       return;
@@ -117,6 +119,7 @@ export default produce((state: Draft<any>, action) => {
       } else {
         state.player.isPlaying = false;
       }
+      state.player.seekTo = 0;
       return;
     }
     case SET_PLAYER_TYPE: {
