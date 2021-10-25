@@ -223,6 +223,7 @@ const ServerBrowser = ({ deviceType }: { deviceType: 'dlna' | 'plex' }) => {
         <SelectedItem
           className="selected-item"
           autoPlay={autoPlay}
+          currentPlaylist={currentPlaylist}
           {...nowPlaying}
           player={{ isPlaying, volume }}
           seekTo={seekTo}

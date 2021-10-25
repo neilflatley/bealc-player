@@ -12,6 +12,7 @@ import StyledItem from '../components.styled/SelectedItem.styled';
 export type SelectedItemProps = {
   className: string;
   autoPlay: boolean;
+  currentPlaylist: any[];
   imageUri: string;
   thumbUri: string;
   mediaUri: string;
@@ -42,6 +43,7 @@ export type SelectedItemProps = {
 const SelectedItem = ({
   className,
   autoPlay,
+  currentPlaylist,
   imageUri,
   thumbUri,
   mediaUri,
@@ -54,8 +56,6 @@ const SelectedItem = ({
   format,
   videoCodec,
   audioCodec,
-  local,
-  height,
   handlePlayNext,
   handleProgress,
   handleSetPlayerType,
@@ -67,6 +67,7 @@ const SelectedItem = ({
   const [playerType, setPlayerType] = useState(
     ['mp3'].includes(format) ? 'audio' : 'video'
   );
+  const [lastPlayedSrc, setLastPlayedSrc] = useState<string>();
   const [playerRef, setPlayerRef] = useState<ReactPlayer>();
   const [audioPlayerRef, setAudioPlayerRef] = useState<ReactAudioPlayer>();
   const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement>();
@@ -105,31 +106,61 @@ const SelectedItem = ({
       setAudioPlayer(audioPlayerRef.audioEl.current);
   }, [audioPlayerRef]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     if (audioPlayer) {
-  //       audioPlayer.pause();
-  //       audioPlayer.src = '';
-  //       audioPlayer.load();
-  //     }
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (audioPlayer) {
+      const url = audioPlayer.src ? new URL(audioPlayer.src) : '';
+      const audioUrl = url && `${url.pathname}${url.search}`;
+      if (mediaUri && mediaUri !== lastPlayedSrc && audioUrl !== mediaUri) {
+        audioPlayer.src = mediaUri;
+        audioPlayer.onended = async () => {
+          setLastPlayedSrc(mediaUri);
+          const i = currentPlaylist.findIndex(i => i.isPlaying);
+          const nextSrc =
+            currentPlaylist.length > i + 1
+              ? currentPlaylist[i + 1].mediaUri
+              : '';
+          console.info(`nextSrc = ${nextSrc}`);
+          if (nextSrc) {
+            audioPlayer.src = nextSrc;
+            if (audioPlayer.paused) await audioPlayer.play();
+          }
+          handlePlayNext();
+          // setTimeout(() => {
+          // }, 1000);
+        };
+        if (player.isPlaying && audioPlayer.paused) audioPlayer.play();
+        //else audioPlayer.pause();
+      }
+    }
+  }, [audioPlayer, player.isPlaying, mediaUri]);
 
   useEffect(() => {
     if (audioPlayer) {
       if (player.isPlaying) {
-        audioPlayer.play();
+        if (audioPlayer.paused) {
+          audioPlayer.play();
+        }
       } else {
+        // if (!audioPlayer.paused) {
         audioPlayer.pause();
+        // }
       }
+    }
+  }, [audioPlayer, player.isPlaying]);
+
+  useEffect(() => {
+    if (audioPlayer) {
       if (typeof audioProgress !== 'undefined') handleProgress(audioProgress);
     }
-  }, [audioPlayer, player.isPlaying, audioProgress]);
+  }, [audioPlayer, audioProgress]);
 
   useEffect(() => {
     const nextTime = seekTo;
-    if (isFinite(nextTime)) {
-      if (audioPlayer) audioPlayer.currentTime = nextTime;
+    if (isFinite(nextTime) & seekTo > 0) {
+      if (audioPlayer) {
+        console.info(`audioPlayer.currentTime = ${nextTime}`);
+        audioPlayer.currentTime = nextTime;
+      }
       if (playerRef) playerRef.seekTo(seekTo);
     }
   }, [audioPlayer, seekTo]);
@@ -138,48 +169,44 @@ const SelectedItem = ({
 
   const ResizablePane = Resizable(false);
 
-  const MediaFormatButtons = () => {
-    return (
-      <>
-        {playerType === 'audio' && (
-          <span>
-            <button
-              className="link-button"
-              onClick={e => {
-                e.preventDefault();
-                setAudioPlayerControls(!audioPlayerControls);
-              }}
-              title={`${
-                !audioPlayerControls ? 'Show' : 'Hide'
-              } player controls}`}
-            >
-              {symbols.controls}
-            </button>
-            {' | '}
-          </span>
-        )}
-        <button
-          className="link-button"
-          onClick={e => {
-            e.preventDefault();
-            const nextType = playerType === 'video' ? 'audio' : 'video';
-            setPlayerType(nextType);
-            handleSetPlayerType(nextType);
-          }}
-          title={`Use ${playerType === 'video' ? 'audio' : 'video'} player`}
-        >
-          {playerType === 'video' ? symbols.video : symbols.audio}
-        </button>
-        {' | '}
-        {format && (
-          <span className="format" title={`${videoCodec} / ${audioCodec}`}>
-            {' '}
-            {format}
-          </span>
-        )}
-      </>
-    );
-  };
+  const MediaFormatButtons = () => (
+    <>
+      {playerType === 'audio' && (
+        <span>
+          <button
+            className="link-button"
+            onClick={e => {
+              e.preventDefault();
+              setAudioPlayerControls(!audioPlayerControls);
+            }}
+            title={`${!audioPlayerControls ? 'Show' : 'Hide'} player controls}`}
+          >
+            {symbols.controls}
+          </button>
+          {' | '}
+        </span>
+      )}
+      <button
+        className="link-button"
+        onClick={e => {
+          e.preventDefault();
+          const nextType = playerType === 'video' ? 'audio' : 'video';
+          setPlayerType(nextType);
+          handleSetPlayerType(nextType);
+        }}
+        title={`Use ${playerType === 'video' ? 'audio' : 'video'} player`}
+      >
+        {playerType === 'video' ? symbols.video : symbols.audio}
+      </button>
+      {' | '}
+      {format && (
+        <span className="format" title={`${videoCodec} / ${audioCodec}`}>
+          {' '}
+          {format}
+        </span>
+      )}
+    </>
+  );
 
   return (
     <StyledItem
@@ -205,29 +232,33 @@ const SelectedItem = ({
                 }}
               >
                 <ReactAudioPlayer
-                  src={mediaUri}
-                  autoPlay
+                  // src={mediaUri}
+                  autoPlay={false}
                   controls={audioPlayerControls}
                   listenInterval={1000}
                   onError={error => {
                     console.log(error);
                     handlePlayNext();
                   }}
-                  onEnded={() => {
-                    handlePlayNext();
-                  }}
+                  // onEnded={() => {
+                  //   if (!playingSrc) handlePlayNext();
+                  // }}
                   onListen={time => {
                     setAudioProgress({
                       played: time / (audioPlayer?.duration || 0),
                       playedSeconds: time,
                       loaded:
-                        (audioPlayer?.buffered.end(
-                          audioPlayer?.buffered.length - 1
-                        ) || 0) / (audioPlayer?.duration || 0),
+                        ((audioPlayer?.readyState &&
+                          audioPlayer?.buffered.end(
+                            audioPlayer?.buffered.length - 1
+                          )) ||
+                          0) / (audioPlayer?.duration || 0),
                       loadedSeconds:
-                        audioPlayer?.buffered.end(
-                          audioPlayer?.buffered.length - 1
-                        ) || 0,
+                        (audioPlayer?.readyState &&
+                          audioPlayer?.buffered.end(
+                            audioPlayer?.buffered.length - 1
+                          )) ||
+                        0,
                       duration: audioPlayer?.duration || 0,
                     });
                   }}
